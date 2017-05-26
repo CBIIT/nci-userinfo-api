@@ -58,12 +58,14 @@ function getUsers(userId, logger, config) {
     return new Promise(function (resolve, reject) {
 
         // var nciSubFilter = '(NIHORGACRONYM=NCI)';
-        // var filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
+        //var nciSubFilter = '';
+        //var filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
+        var filter = userId ? 'UNIQUEIDENTIFIER=' + userId : 'UNIQUEIDENTIFIER=*';
 
         var userSearchOptions = {
             scope: 'sub',
             // attributes: config.vds.user_attributes,
-            // filter: filter
+            filter: filter
         };
         var counter = 0;
 
