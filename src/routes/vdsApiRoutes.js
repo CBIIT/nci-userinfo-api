@@ -22,18 +22,23 @@ var router = function (logger, config) {
         logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
     });
 
-    apiRouter.route('/users')
+    apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
 
-            getUsers(null, logger, config)
+            getUsers(null, req.params.ic, logger, config)
                 .then(function (users) {
+
+                    // users.forEach(u => {
+                    //     logger.info(u.UNIQUEIDENTIFIER + ',' + u.GIVENNAME + ' ' + u.SN + ',' + u.NIHPOC + ',' + u.MANAGER + ',' + u.NIHCOTRID + ',' + u.ORGANIZATIONALSTAT);
+                    // });
+
                     res.send(users);
                 });
         });
 
-    apiRouter.route('/user')
-        .post(function (req, res) {
-            var nihId = req.body.nihid;
+    apiRouter.route('/users/user/:nihId')
+        .get(function (req, res) {
+            const nihId = req.params.nihId;
 
             if (nihId === undefined) {
                 res.status(400).send('nihid is not defined.');
@@ -45,7 +50,7 @@ var router = function (logger, config) {
                 return;
             }
 
-            getUsers(nihId, logger, config)
+            getUsers(nihId, '*', logger, config)
                 .then(function (users) {
                     res.send(users);
                 });
@@ -53,14 +58,14 @@ var router = function (logger, config) {
     return apiRouter;
 };
 
-function getUsers(userId, logger, config) {
+function getUsers(userId, ic, logger, config) {
 
     return new Promise(function (resolve, reject) {
 
-        // var nciSubFilter = '(NIHORGACRONYM=NCI)';
+        const nciSubFilter = '(NIHORGACRONYM=' + ic + ')';
         //var nciSubFilter = '';
-        //var filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
-        var filter = userId ? 'UNIQUEIDENTIFIER=' + userId : 'UNIQUEIDENTIFIER=*';
+        const filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
+        //const filter = userId ? 'UNIQUEIDENTIFIER=' + userId : 'UNIQUEIDENTIFIER=*';
 
         var userSearchOptions = {
             scope: 'sub',
