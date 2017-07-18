@@ -21,10 +21,5 @@ module.exports = {
             server = https.createServer( options, app ).listen( config.web.ssl_port, cb );
             logger.info( 'Accepting https requests on port ' + config.web.ssl_port );
         }
-
-        server.on('error', function(err) {
-            logger.error('Server errror: ' + err);
-        });
-
     }
 };

@@ -22,6 +22,23 @@ var router = function (logger, config) {
         logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
     });
 
+    ldapClient.on('error', function (err) {
+        logger.error('ldap client error: ' + err + ' auto-reconnect.');
+    });
+
+    ldapClient.on('resultError', function (err) {
+        logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
+    });
+
+    ldapClient.on('socketTimeout', function (err) {
+        logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
+    });
+
+    ldapClient.on('timeout', function (err) {
+        logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
+    });
+    
+
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
 
