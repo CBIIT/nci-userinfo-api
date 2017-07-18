@@ -18,7 +18,7 @@ var router = function (logger, config) {
         tlsOptions: tlsOptions,
         idleTimeout: 15 * 60 * 1000,
         timeout: 15 * 60 * 1000,
-        connectTimeout: 15 * 60 * 1000 // 15 minsy
+        connectTimeout: 15 * 60 * 1000 // 15 mins
     });
 
     ldapClient.on('connectError', function (err) {
@@ -115,7 +115,7 @@ function getUsers(userId, ic, logger, config) {
                     users.push(entry.object);
                 });
                 ldapRes.on('searchReference', function () { });
-                ldapRes.on('page', function (result) {
+                ldapRes.on('page', function () {
                     logger.info('page end');
                 });
                 ldapRes.on('error', function (err) {
