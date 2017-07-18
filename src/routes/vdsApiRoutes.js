@@ -15,7 +15,10 @@ var router = function (logger, config) {
     ldapClient = ldap.createClient({
         url: config.vds.host,
         reconnect: true,
-        tlsOptions: tlsOptions
+        tlsOptions: tlsOptions,
+        idleTimeout: 15 * 60 * 1000,
+        timeout: 15 * 60 * 1000,
+        connectTimeout: 15 * 60 * 1000 // 15 minsy
     });
 
     ldapClient.on('connectError', function (err) {
@@ -37,7 +40,7 @@ var router = function (logger, config) {
     ldapClient.on('timeout', function (err) {
         logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
     });
-    
+
 
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
@@ -87,7 +90,8 @@ function getUsers(userId, ic, logger, config) {
         var userSearchOptions = {
             scope: 'sub',
             // attributes: config.vds.user_attributes,
-            filter: filter
+            filter: filter,
+            paged: true
         };
         var counter = 0;
 
@@ -111,6 +115,9 @@ function getUsers(userId, ic, logger, config) {
                     users.push(entry.object);
                 });
                 ldapRes.on('searchReference', function () { });
+                ldapRes.on('page', function (result) {
+                    logger.info('page end');
+                });
                 ldapRes.on('error', function (err) {
                     ldapClient.unbind();
                     if (err.code === 32) {
