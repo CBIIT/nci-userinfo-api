@@ -98,7 +98,10 @@ module.exports.getError = function (res) {
   assert.ok(res instanceof LDAPResult, 'res (LDAPResult) required');
 
   var errObj = ERRORS[res.status];
-  var E = module.exports[errObj.err] || {};
+  if (!errObj) {
+    return new E(res.errorMessage, res.matchedDN || null, module.exports.getError);
+  }
+  var E = module.exports[errObj.err];
   return new E(res.errorMessage || errObj.message,
                res.matchedDN || null,
                module.exports.getError);

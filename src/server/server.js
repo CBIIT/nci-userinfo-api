@@ -14,11 +14,10 @@ function setup( ssl ) {
 module.exports = {
     create: function ( logger, config, app, cb ) {
         var options = setup( config.ssl );
-        var server;
-        server = http.createServer( app ).listen( config.web.http_port, cb );
+        http.createServer( app ).listen( config.web.http_port, cb );
         logger.info( 'Accepting http requests on port ' + config.web.http_port );
         if ( options ) {
-            server = https.createServer( options, app ).listen( config.web.ssl_port, cb );
+            https.createServer( options, app ).listen( config.web.ssl_port, cb );
             logger.info( 'Accepting https requests on port ' + config.web.ssl_port );
         }
     }
