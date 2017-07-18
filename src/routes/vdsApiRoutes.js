@@ -83,7 +83,7 @@ function getUsers(userId, ic, logger, config) {
             }
             var users = [];
             logger.info('starting search');
-            ldapClient.search(config.vds.nedSearchBase, userSearchOptions, function (err, ldapRes) {
+            ldapClient.search(config.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     logger.error('error: ' + err.code);
                 }
