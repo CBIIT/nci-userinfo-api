@@ -2,7 +2,13 @@ var express = require('express');
 var apiRouter = express.Router();
 var WSSecurity = require('wssecurity');
 var soap = require('soap');
+var js2xmlparser = require('js2xmlparser2');
 
+var parserOptions = {
+    wrapArray: {
+        enabled: true
+    }
+};
 
 var router = function (logger, config) {
 
@@ -116,7 +122,11 @@ var router = function (logger, config) {
                     if (err) {
                         res.send(err);
                     } else {
-                        res.send(result);
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('result', result, parserOptions));
+                        } else {
+                            res.send(result);
+                        }
                     }
 
                 });

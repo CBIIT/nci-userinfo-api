@@ -12,6 +12,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-basic-auth": "^1.1.1",
+    "js2xmlparser2": "^0.2.0",
     "ldapjs": "^1.0.1",
     "soap": "^0.19.2",
     "ssl-root-cas": "^1.2.3",

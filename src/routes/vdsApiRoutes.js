@@ -2,7 +2,14 @@ var express = require('express');
 var apiRouter = express.Router();
 var ldap = require('ldapjs');
 var fs = require('fs');
+var js2xmlparser = require('js2xmlparser2');
 var ldapClient;
+
+var parserOptions = {
+    wrapArray: {
+        enabled: true
+    }
+};
 
 var router = function (logger, config) {
 
@@ -51,8 +58,11 @@ var router = function (logger, config) {
                     // users.forEach(u => {
                     //     logger.info(u.UNIQUEIDENTIFIER + ',' + u.GIVENNAME + ' ' + u.SN + ',' + u.NIHPOC + ',' + u.MANAGER + ',' + u.NIHCOTRID + ',' + u.ORGANIZATIONALSTAT);
                     // });
-
-                    res.send(users);
+                    if (req.accepts('xml')) {
+                        res.send(js2xmlparser('users', users, parserOptions));
+                    } else {
+                        res.send(users);
+                    }
                 });
         });
 
@@ -72,7 +82,11 @@ var router = function (logger, config) {
 
             getUsers(nihId, '*', logger, config)
                 .then(function (users) {
-                    res.send(users);
+                    if (req.accepts('xml')) {
+                        res.send(js2xmlparser('users', users, parserOptions));
+                    } else {
+                        res.send(users);
+                    }
                 });
         });
     return apiRouter;
@@ -112,7 +126,33 @@ function getUsers(userId, ic, logger, config) {
                     if (++counter % 10000 === 0) {
                         logger.info(counter + ' records found and counting...');
                     }
-                    users.push(entry.object);
+                    let obj = entry.object;
+                    const raw = entry.raw;
+                    let guidField = raw.objectGUID;
+                    if (guidField) {
+                        obj.objectGUID = guidField.toString('base64');
+                    }
+                    guidField = raw['mS-DS-ConsistencyGuid'];
+                    if (guidField) {
+                        obj['mS-DS-ConsistencyGuid'] = guidField.toString('base64');
+                    }
+                    guidField = raw['msExchArchiveGUID'];
+                    if (guidField) {
+                        obj['msExchArchiveGUID'] = guidField.toString('base64');
+                    }
+                    guidField = raw['msRTCSIP-UserRoutingGroupId'];
+                    if (guidField) {
+                        obj['msRTCSIP-UserRoutingGroupId'] = guidField.toString('base64');
+                    }
+                    guidField = raw['msExchMailboxGuid'];
+                    if (guidField) {
+                        obj['msExchMailboxGuid'] = guidField.toString('base64');
+                    }
+                    guidField = raw['objectSid'];
+                    if (guidField) {
+                        obj['objectSid'] = guidField.toString('base64');
+                    }
+                    users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
                 ldapRes.on('page', function () {
