@@ -152,6 +152,10 @@ function getUsers(userId, ic, logger, config) {
                     if (guidField) {
                         obj['objectSid'] = guidField.toString('base64');
                     }
+                    guidField = raw['userCertificate'];
+                    if (guidField) {
+                        obj['userCertificate'] = guidField.toString('base64');
+                    }
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
