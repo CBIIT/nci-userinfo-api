@@ -156,6 +156,15 @@ function getUsers(userId, ic, logger, config) {
                     if (guidField) {
                         obj['userCertificate'] = guidField.toString('base64');
                     }
+                    guidField = raw['msExchSafeSendersHash'];
+                    if (guidField) {
+                        obj['msExchSafeSendersHash'] = guidField.toString('base64');
+                    }
+                    guidField = raw['msExchUMSpokenName'];
+                    if (guidField) {
+                        obj['msExchUMSpokenName'] = guidField.toString('base64');
+                    }
+
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
