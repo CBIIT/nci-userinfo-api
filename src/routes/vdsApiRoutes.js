@@ -51,15 +51,9 @@ var router = function (logger, config) {
 
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
-            logger.info(req.headers);
-            logger.info('IC: ' + req.params.ic);
 
             getUsers(null, req.params.ic, logger, config)
                 .then(function (users) {
-
-                    // users.forEach(u => {
-                    //     logger.info(u.UNIQUEIDENTIFIER + ',' + u.GIVENNAME + ' ' + u.SN + ',' + u.NIHPOC + ',' + u.MANAGER + ',' + u.NIHCOTRID + ',' + u.ORGANIZATIONALSTAT);
-                    // });
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
                     } else {
