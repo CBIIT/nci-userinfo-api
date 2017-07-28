@@ -178,6 +178,7 @@ function getUsers(userId, ic, logger, config) {
                 });
                 ldapRes.on('end', function () {
                     logger.info('unbind and release');
+                    logger.info(counter + ' records found');
                     ldapClient.unbind();
                     resolve(users);
                 });
