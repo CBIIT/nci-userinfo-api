@@ -5,6 +5,19 @@ var Excel = require('exceljs');
 
 var restClient = new RestClient();
 
+var CLOSING_STAGE_MAP =
+    {
+        'not_closing': 'Not Closing',
+        'considering': 'Considering',
+        'closing_inventory': 'Closing - 1. Inventory',
+        'closing_application_mapping': 'Closing - 2. Application Mapping',
+        'closing_migration_planning': 'Closing - 3. Migration Planning',
+        'closing_migration_execution': 'Closing - 4. Migration Execution',
+        'closing_equipment_removal': 'Closing - 5. Equipment Removal',
+        'closed': 'Closed'
+    }; 
+
+
 var router = function (logger, config) {
 
     excelApiRouter.route('/UtilizationReport/fiscalyear/:year/quarter/:quarter')
@@ -59,13 +72,15 @@ var router = function (logger, config) {
 
                     // console.log('dataCenterName: ' + dataCenterName + 'category: ' + category);
 
-                    if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
-                        dataCenterName = 'atc-dceg';
-                    } else if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
-                        dataCenterName == '9609mc_te21-ccr';
-                    } else if (dataCenterName === '9609mc_te21' && category === 'DEA') {
-                        dataCenterName == '9609mc_te21-dea';
-                    }
+                    dataCenterName = getDataCenterName(dataCenterName, category);
+
+                    // if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
+                    //     dataCenterName = 'atc-dceg';
+                    // } else if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
+                    //     dataCenterName = '9609mc_te21-ccr';
+                    // } else if (dataCenterName === '9609mc_te21' && category === 'DEA') {
+                    //     dataCenterName = '9609mc_te21-dea';
+                    // }
 
                     // Do not rely on ATC and TE21 to fetch total CBIIT FTEs - they have their own FTEs
                     if (category != 'Totals' && dataCenterName !== 'atc_warehouse' && dataCenterName !== 'atc-dcm' && dataCenterName !== 'atc-dceg' && dataCenterName != '9609mc_te21' && dataCenterName != '9609mc_te21-ccr' && dataCenterName != '9609mc_te21-dea') {
@@ -152,16 +167,7 @@ var router = function (logger, config) {
                     var dataCenterName = o.u_data_center_name;
                     var category = o.u_data_call.split(' - ')[1].trim();
 
-                    if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
-                        // console.log('Creating data center atc-dceg');
-                        dataCenterName = 'atc-dceg';
-                    } else if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
-                        // console.log('Creating data center 9609mc_te21-ccr');
-                        dataCenterName = '9609mc_te21-ccr';
-                    } else if (dataCenterName === '9609mc_te21' && category === 'DEA') {
-                        // console.log('Creating data center 9609mc_te21-dea');
-                        dataCenterName = '9609mc_te21-dea';
-                    }
+                    dataCenterName = getDataCenterName(dataCenterName, category);
 
                     if (!resultMap.hasOwnProperty(dataCenterName)) {
                         console.log('creating key ' + dataCenterName);
@@ -190,28 +196,24 @@ var router = function (logger, config) {
                     }
 
                     if (category === 'Totals') {
-                        resultMap[dataCenterName].u_closing_stage = o.u_closing_stage;
-                        resultMap[dataCenterName].u_closing_on_quarter = o.u_closing_on_quarter;
+                        // Only get the closing stage information from totals. The rest should come from the children records with categories 'Server', 'Storage', 'Data Center Management'
+                        resultMap[dataCenterName].u_closing_stage = CLOSING_STAGE_MAP[o.u_closing_stage] || o.u_closing_stage;
+                        resultMap[dataCenterName].u_closing_on_quarter =  o.u_closing_on_quarter ? 'Q' + o.u_closing_on_quarter : '';
                         resultMap[dataCenterName].u_closing_on_fiscal_year = o.u_closing_on_fiscal_year;
 
-                        // Only get the closing stage information from totals. The rest should come from the children records.
+
                         return;
                     }
 
                     if (o.u_average_it_electricity_usage) {
                         resultMap[dataCenterName].u_average_it_electricity_usage += parseFloat(o.u_average_it_electricity_usage);
                     }
+
                     if (o.u_automated_monitoring) {
                         resultMap[dataCenterName].u_automated_monitoring = o.u_automated_monitoring;
-
-                        // if (dataCenterName === 'atc-dceg' || dataCenterName === '9609mc_te21-ccr' || dataCenterName === '9609mc_te21-dea') {
-                        //     resultMap[dataCenterName].u_automated_monitoring = o.u_automated_monitoring;
-                        // } else {
-                        //     resultMap[dataCenterName].u_automated_monitoring = 'No';
-                        // }
                     }
+
                     if (o.u_server_utilization) {
-                        // console.log('data center ' + dataCenterName + ' server utilization: ' + o.u_server_utilization + '; category: ' + category);
                         resultMap[dataCenterName].u_server_utilization += parseFloat(o.u_server_utilization);
                     }
 
@@ -325,10 +327,6 @@ var router = function (logger, config) {
                 resultMap['atc_warehouse'].u_total_storage += resultMap['atc-dceg'].u_total_storage;
                 resultMap['atc_warehouse'].u_used_storage += resultMap['atc-dceg'].u_used_storage;
 
-                // console.log('te21 utilization: ' + resultMap['9609mc_te21'].u_server_utilization);
-                // console.log('ccr utilization: ' + resultMap['9609mc_te21-ccr'].u_server_utilization);
-                // console.log('dea utilization: ' + resultMap['9609mc_te21-dea'].u_server_utilization);
-
                 resultMap['9609mc_te21'].u_average_it_electricity_usage += resultMap['9609mc_te21-ccr'].u_average_it_electricity_usage;
                 resultMap['9609mc_te21'].u_average_it_electricity_usage += resultMap['9609mc_te21-dea'].u_average_it_electricity_usage;
                 resultMap['9609mc_te21'].u_total_ftes += resultMap['9609mc_te21-ccr'].u_total_ftes;
@@ -435,11 +433,11 @@ var router = function (logger, config) {
                     key: 'u_closing_stage'
                 },
                 {
-                    header: 'Closing On Year',
+                    header: 'Closing Year',
                     key: 'u_closing_on_fiscal_year'
                 },
                 {
-                    header: 'Closing On Quarter',
+                    header: 'Closing Quarter',
                     key: 'u_closing_on_quarter'
                 }
                 ];
@@ -468,7 +466,7 @@ var router = function (logger, config) {
                         u_used_storage: resultMap[key].u_used_storage,
                         u_closing_stage: resultMap[key].u_closing_stage,
                         u_closing_on_quarter: resultMap[key].u_closing_on_quarter,
-                        u_closing_on_fiscal_year: resultMap[key].u_closing_on_fiscal_year                     
+                        u_closing_on_fiscal_year: resultMap[key].u_closing_on_fiscal_year
                     });
                 });
 
@@ -486,5 +484,21 @@ var router = function (logger, config) {
     return excelApiRouter;
 };
 
+
+function getDataCenterName(dataCenterName, category) {
+
+    if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
+        return 'atc-dceg';
+    }
+    if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
+        return '9609mc_te21-ccr';
+    }
+    if (dataCenterName === '9609mc_te21' && category === 'DEA') {
+        return '9609mc_te21-dea';
+    }
+
+
+    return dataCenterName;
+}
 
 module.exports = router;
