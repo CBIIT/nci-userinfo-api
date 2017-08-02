@@ -70,17 +70,7 @@ var router = function (logger, config) {
                         return;
                     }
 
-                    // console.log('dataCenterName: ' + dataCenterName + 'category: ' + category);
-
                     dataCenterName = getDataCenterName(dataCenterName, category);
-
-                    // if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
-                    //     dataCenterName = 'atc-dceg';
-                    // } else if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
-                    //     dataCenterName = '9609mc_te21-ccr';
-                    // } else if (dataCenterName === '9609mc_te21' && category === 'DEA') {
-                    //     dataCenterName = '9609mc_te21-dea';
-                    // }
 
                     // Do not rely on ATC and TE21 to fetch total CBIIT FTEs - they have their own FTEs
                     if (category != 'Totals' && dataCenterName !== 'atc_warehouse' && dataCenterName !== 'atc-dcm' && dataCenterName !== 'atc-dceg' && dataCenterName != '9609mc_te21' && dataCenterName != '9609mc_te21-ccr' && dataCenterName != '9609mc_te21-dea') {
