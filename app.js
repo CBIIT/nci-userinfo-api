@@ -11,18 +11,21 @@ var app = express();
 var authObject = {};
 authObject[config.basicauth.user] = config.basicauth.password;
 
-app.use(basicAuth({
-    users: authObject
-}));
-
 // Don't add routes before this line! All routes pass through the require https filter.
 app.use(requireHTTPS);
 app.use(bodyParser.json());
 
 var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
 var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
+var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
+
+app.use('/api/util', utilRouter);
 
 
+app.use(basicAuth({
+    users: authObject
+}));
+// Routes after this line require basic authentication
 app.use('/api/vds', vdsApiRouter);
 app.use('/api/ned', nedApiRouter);
 
