@@ -26,7 +26,7 @@ var router = function (logger, config) {
                 // The available FTEs for server support
                 var totalServerFTEs = 0;
 
-                // The available FTEs for data center management
+                // The available FTEs for data center managementG
                 var totalDcmFTEs = 0;
 
                 // The available FTEs for storage
@@ -472,9 +472,11 @@ var router = function (logger, config) {
                     });
                 });
 
-                workbook.xlsx.writeFile('/temp/test.xlsx')
+                const exportFile = config.sn.tempLocation + 'UtilizationReport_Q' + req.params.quarter + '.xlsx';
+
+                workbook.xlsx.writeFile(exportFile)
                     .then(function () {
-                        res.sendFile('/temp/test.xlsx');
+                        res.sendFile(exportFile);
                     });
 
                 // res.send(data);
