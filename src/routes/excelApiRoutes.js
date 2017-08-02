@@ -7,11 +7,11 @@ var restClient = new RestClient();
 
 var router = function (logger, config) {
 
-    excelApiRouter.route('/UtilizationReport/quarter/:quarter')
+    excelApiRouter.route('/UtilizationReport/fiscalyear/:year/quarter/:quarter')
         .get(function (req, res) {
             var args = {
 
-                parameters: { quarter: req.params.quarter },
+                parameters: { year: req.params.year, quarter: req.params.quarter },
                 headers: {
                     'Content-Type': 'application/json'
                 }
