@@ -22,6 +22,7 @@ var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
 app.use('/api/util', utilRouter);
 
 
+// Enforce authentication
 app.use(basicAuth({
     users: authObject
 }));
