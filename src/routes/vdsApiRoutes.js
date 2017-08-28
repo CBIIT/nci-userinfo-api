@@ -160,7 +160,19 @@ function getUsers(userId, ic, logger, config) {
                     if (guidField) {
                         obj['msExchUMSpokenName'] = guidField.toString('base64');
                     }
-
+                    guidField = raw['userSMIMECertificate'];
+                    if (guidField) {
+                        obj['userSMIMECertificate'] = guidField.toString('base64');
+                    }
+                    guidField = raw['msRTCSIP-UserRoutingGroupId'];
+                    if (guidField) {
+                        obj['msRTCSIP-UserRoutingGroupId'] = guidField.toString('base64');
+                    }
+                    guidField = raw['objectGUID'];
+                    if (guidField) {
+                        obj['objectGUID'] = guidField.toString('base64');
+                    }
+                    
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
