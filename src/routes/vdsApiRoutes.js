@@ -124,55 +124,59 @@ function getUsers(userId, ic, logger, config) {
                     }
                     let obj = entry.object;
                     const raw = entry.raw;
-                    let guidField = raw.objectGUID;
-                    if (guidField) {
-                        obj.objectGUID = guidField.toString('base64');
+                    let base64Field = raw.objectGUID;
+                    if (base64Field) {
+                        obj.objectGUID = base64Field.toString('base64');
                     }
-                    guidField = raw['mS-DS-ConsistencyGuid'];
-                    if (guidField) {
-                        obj['mS-DS-ConsistencyGuid'] = guidField.toString('base64');
+                    base64Field = raw['mS-DS-ConsistencyGuid'];
+                    if (base64Field) {
+                        obj['mS-DS-ConsistencyGuid'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msExchArchiveGUID'];
-                    if (guidField) {
-                        obj['msExchArchiveGUID'] = guidField.toString('base64');
+                    base64Field = raw['msExchArchiveGUID'];
+                    if (base64Field) {
+                        obj['msExchArchiveGUID'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msRTCSIP-UserRoutingGroupId'];
-                    if (guidField) {
-                        obj['msRTCSIP-UserRoutingGroupId'] = guidField.toString('base64');
+                    base64Field = raw['msRTCSIP-UserRoutingGroupId'];
+                    if (base64Field) {
+                        obj['msRTCSIP-UserRoutingGroupId'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msExchMailboxGuid'];
-                    if (guidField) {
-                        obj['msExchMailboxGuid'] = guidField.toString('base64');
+                    base64Field = raw['msExchMailboxGuid'];
+                    if (base64Field) {
+                        obj['msExchMailboxGuid'] = base64Field.toString('base64');
                     }
-                    guidField = raw['objectSid'];
-                    if (guidField) {
-                        obj['objectSid'] = guidField.toString('base64');
+                    base64Field = raw['objectSid'];
+                    if (base64Field) {
+                        obj['objectSid'] = base64Field.toString('base64');
                     }
-                    guidField = raw['userCertificate'];
-                    if (guidField) {
-                        obj['userCertificate'] = guidField.toString('base64');
+                    base64Field = raw['userCertificate'];
+                    if (base64Field) {
+                        obj['userCertificate'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msExchSafeSendersHash'];
-                    if (guidField) {
-                        obj['msExchSafeSendersHash'] = guidField.toString('base64');
+                    base64Field = raw['msExchSafeSendersHash'];
+                    if (base64Field) {
+                        obj['msExchSafeSendersHash'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msExchUMSpokenName'];
-                    if (guidField) {
-                        obj['msExchUMSpokenName'] = guidField.toString('base64');
+                    base64Field = raw['msExchUMSpokenName'];
+                    if (base64Field) {
+                        obj['msExchUMSpokenName'] = base64Field.toString('base64');
                     }
-                    guidField = raw['userSMIMECertificate'];
-                    if (guidField) {
-                        obj['userSMIMECertificate'] = guidField.toString('base64');
+                    base64Field = raw['userSMIMECertificate'];
+                    if (base64Field) {
+                        obj['userSMIMECertificate'] = base64Field.toString('base64');
                     }
-                    guidField = raw['msRTCSIP-UserRoutingGroupId'];
-                    if (guidField) {
-                        obj['msRTCSIP-UserRoutingGroupId'] = guidField.toString('base64');
+                    base64Field = raw['msRTCSIP-UserRoutingGroupId'];
+                    if (base64Field) {
+                        obj['msRTCSIP-UserRoutingGroupId'] = base64Field.toString('base64');
                     }
-                    guidField = raw['objectGUID'];
-                    if (guidField) {
-                        obj['objectGUID'] = guidField.toString('base64');
+                    base64Field = raw['objectGUID'];
+                    if (base64Field) {
+                        obj['objectGUID'] = base64Field.toString('base64');
                     }
-                    
+                    base64Field = raw['thumbnailPhoto'];
+                    if (base64Field) {
+                        obj['thumbnailPhoto'] = base64Field.toString('base64');
+                    }
+
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
