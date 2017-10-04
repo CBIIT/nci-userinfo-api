@@ -118,8 +118,7 @@ const getUsers = async (userId, ic, logger, config) => {
 
             if (err) {
                 logger.error('Bind error: ' + err);
-                ldapClient.destroy();
-                // ldapClient.unbind();
+                ldapClient.unbind();
                 reject(Error(err.message));
             }
             var users = [];
@@ -195,8 +194,7 @@ const getUsers = async (userId, ic, logger, config) => {
                     logger.info('page end');
                 });
                 ldapRes.on('error', function (err) {
-                    ldapClient.destroy();
-                    // ldapClient.unbind();
+                    ldapClient.unbind();
                     if (err.code === 32) {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve({});
@@ -205,10 +203,9 @@ const getUsers = async (userId, ic, logger, config) => {
                     }
                 });
                 ldapRes.on('end', function () {
-                    logger.info('destroy client');
+                    logger.info('unbind client');
                     logger.info(counter + ' records found');
-                    ldapClient.destroy();
-                    // ldapClient.unbind();
+                    ldapClient.unbind();
                     resolve(users);
                 });
             });
