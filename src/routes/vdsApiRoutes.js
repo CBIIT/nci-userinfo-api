@@ -3,7 +3,11 @@ var apiRouter = express.Router();
 var ldap = require('ldapjs');
 var fs = require('fs');
 var js2xmlparser = require('js2xmlparser2');
-var ldapClient;
+// var ldapClient;
+var configRef;
+var loggerRef;
+var tlsOptions;
+
 
 var parserOptions = {
     wrapArray: {
@@ -13,40 +17,43 @@ var parserOptions = {
 
 var router = function (logger, config) {
 
-    const tlsOptions = {
+    loggerRef = logger;
+    configRef = config;
+
+    tlsOptions = {
         ca: [fs.readFileSync(config.vds.vdscert)]
     };
 
     var isNum = new RegExp('^[0-9]+$');
 
-    ldapClient = ldap.createClient({
-        url: config.vds.host,
-        reconnect: true,
-        tlsOptions: tlsOptions,
-        idleTimeout: 15 * 60 * 1000,
-        timeout: 15 * 60 * 1000,
-        connectTimeout: 15 * 60 * 1000 // 15 mins
-    });
+    // ldapClient = ldap.createClient({
+    //     url: config.vds.host,
+    //     reconnect: true,
+    //     tlsOptions: tlsOptions,
+    //     idleTimeout: 15 * 60 * 1000,
+    //     timeout: 15 * 60 * 1000,
+    //     connectTimeout: 15 * 60 * 1000 // 15 mins
+    // });
 
-    ldapClient.on('connectError', function (err) {
-        logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
-    });
+    // ldapClient.on('connectError', function (err) {
+    //     logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
+    // });
 
-    ldapClient.on('error', function (err) {
-        logger.error('ldap client error: ' + err + ' auto-reconnect.');
-    });
+    // ldapClient.on('error', function (err) {
+    //     logger.error('ldap client error: ' + err + ' auto-reconnect.');
+    // });
 
-    ldapClient.on('resultError', function (err) {
-        logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
-    });
+    // ldapClient.on('resultError', function (err) {
+    //     logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
+    // });
 
-    ldapClient.on('socketTimeout', function (err) {
-        logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
-    });
+    // ldapClient.on('socketTimeout', function (err) {
+    //     logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
+    // });
 
-    ldapClient.on('timeout', function (err) {
-        logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
-    });
+    // ldapClient.on('timeout', function (err) {
+    //     logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
+    // });
 
 
     apiRouter.route('/users/ic/:ic')
@@ -88,9 +95,9 @@ var router = function (logger, config) {
     return apiRouter;
 };
 
-function getUsers(userId, ic, logger, config) {
+const getUsers = async (userId, ic, logger, config) => {
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(async function (resolve, reject) {
 
         const nciSubFilter = '(NIHORGACRONYM=' + ic + ')';
         //var nciSubFilter = '';
@@ -104,12 +111,15 @@ function getUsers(userId, ic, logger, config) {
             paged: true
         };
         var counter = 0;
+        const ldapClient = await getLdapClient();
+        console.log(ldapClient);
 
         ldapClient.bind(config.vds.dn, config.vds.password, function (err) {
 
             if (err) {
                 logger.error('Bind error: ' + err);
-                ldapClient.unbind();
+                ldapClient.destroy();
+                // ldapClient.unbind();
                 reject(Error(err.message));
             }
             var users = [];
@@ -128,6 +138,7 @@ function getUsers(userId, ic, logger, config) {
                     if (base64Field) {
                         obj.objectGUID = base64Field.toString('base64');
                     }
+
                     base64Field = raw['mS-DS-ConsistencyGuid'];
                     if (base64Field) {
                         obj['mS-DS-ConsistencyGuid'] = base64Field.toString('base64');
@@ -184,7 +195,8 @@ function getUsers(userId, ic, logger, config) {
                     logger.info('page end');
                 });
                 ldapRes.on('error', function (err) {
-                    ldapClient.unbind();
+                    ldapClient.destroy();
+                    // ldapClient.unbind();
                     if (err.code === 32) {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve({});
@@ -193,9 +205,10 @@ function getUsers(userId, ic, logger, config) {
                     }
                 });
                 ldapRes.on('end', function () {
-                    logger.info('unbind and release');
+                    logger.info('destroy client');
                     logger.info(counter + ' records found');
-                    ldapClient.unbind();
+                    ldapClient.destroy();
+                    // ldapClient.unbind();
                     resolve(users);
                 });
             });
@@ -203,6 +216,43 @@ function getUsers(userId, ic, logger, config) {
         });
 
     });
-}
+};
+
+
+const getLdapClient = async () => {
+ 
+    try {
+        const ldapClient = await ldap.createClient({
+            url: configRef.vds.host,
+            tlsOptions: tlsOptions,
+            idleTimeout: 15 * 60 * 1000,
+            timeout: 15 * 60 * 1000,
+            connectTimeout: 15 * 60 * 1000 // 15 mins
+        });
+
+        ldapClient.on('connectError', function (err) {
+            loggerRef.error('ldap client connectError: ' + err);
+        });
+
+        ldapClient.on('error', function (err) {
+            loggerRef.error('ldap client error: ' + err);
+        });
+
+        ldapClient.on('resultError', function (err) {
+            loggerRef.error('ldap client resultError: ' + err);
+        });
+
+        ldapClient.on('socketTimeout', function (err) {
+            loggerRef.error('ldap socket timeout: ' + err);
+        });
+
+        ldapClient.on('timeout', function (err) {
+            loggerRef.error('ldap client timeout: ' + err);
+        });
+        return ldapClient;
+    } catch (error) {
+        return Error(error);
+    }
+};
 
 module.exports = router;
