@@ -3,10 +3,10 @@ var apiRouter = express.Router();
 var ldap = require('ldapjs');
 var fs = require('fs');
 var js2xmlparser = require('js2xmlparser2');
-// var ldapClient;
-var configRef;
-var loggerRef;
-var tlsOptions;
+var ldapClient;
+// var configRef;
+// var loggerRef;
+// var tlsOptions;
 
 
 var parserOptions = {
@@ -17,43 +17,43 @@ var parserOptions = {
 
 var router = function (logger, config) {
 
-    loggerRef = logger;
-    configRef = config;
+    // loggerRef = logger;
+    // configRef = config;
 
-    tlsOptions = {
+    var tlsOptions = {
         ca: [fs.readFileSync(config.vds.vdscert)]
     };
 
     var isNum = new RegExp('^[0-9]+$');
 
-    // ldapClient = ldap.createClient({
-    //     url: config.vds.host,
-    //     reconnect: true,
-    //     tlsOptions: tlsOptions,
-    //     idleTimeout: 15 * 60 * 1000,
-    //     timeout: 15 * 60 * 1000,
-    //     connectTimeout: 15 * 60 * 1000 // 15 mins
-    // });
+    ldapClient = ldap.createClient({
+        url: config.vds.host,
+        reconnect: true,
+        tlsOptions: tlsOptions,
+        idleTimeout: 15 * 60 * 1000,
+        timeout: 15 * 60 * 1000,
+        connectTimeout: 15 * 60 * 1000 // 15 mins
+    });
 
-    // ldapClient.on('connectError', function (err) {
-    //     logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
-    // });
+    ldapClient.on('connectError', function (err) {
+        logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
+    });
 
-    // ldapClient.on('error', function (err) {
-    //     logger.error('ldap client error: ' + err + ' auto-reconnect.');
-    // });
+    ldapClient.on('error', function (err) {
+        logger.error('ldap client error: ' + err + ' auto-reconnect.');
+    });
 
-    // ldapClient.on('resultError', function (err) {
-    //     logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
-    // });
+    ldapClient.on('resultError', function (err) {
+        logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
+    });
 
-    // ldapClient.on('socketTimeout', function (err) {
-    //     logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
-    // });
+    ldapClient.on('socketTimeout', function (err) {
+        logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
+    });
 
-    // ldapClient.on('timeout', function (err) {
-    //     logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
-    // });
+    ldapClient.on('timeout', function (err) {
+        logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
+    });
 
 
     apiRouter.route('/users/ic/:ic')
@@ -111,8 +111,8 @@ const getUsers = async (userId, ic, logger, config) => {
             paged: true
         };
         var counter = 0;
-        const ldapClient = await getLdapClient();
-        console.log(ldapClient);
+        // const ldapClient = await getLdapClient();
+        // console.log(ldapClient);
 
         ldapClient.bind(config.vds.dn, config.vds.password, function (err) {
 
@@ -216,40 +216,40 @@ const getUsers = async (userId, ic, logger, config) => {
 };
 
 
-const getLdapClient = async () => {
+// const getLdapClient = async () => {
  
-    try {
-        const ldapClient = await ldap.createClient({
-            url: configRef.vds.host,
-            tlsOptions: tlsOptions,
-            idleTimeout: 15 * 60 * 1000,
-            timeout: 15 * 60 * 1000,
-            connectTimeout: 15 * 60 * 1000 // 15 mins
-        });
+//     try {
+//         const ldapClient = await ldap.createClient({
+//             url: configRef.vds.host,
+//             tlsOptions: tlsOptions,
+//             idleTimeout: 15 * 60 * 1000,
+//             timeout: 15 * 60 * 1000,
+//             connectTimeout: 15 * 60 * 1000 // 15 mins
+//         });
 
-        ldapClient.on('connectError', function (err) {
-            loggerRef.error('ldap client connectError: ' + err);
-        });
+//         ldapClient.on('connectError', function (err) {
+//             loggerRef.error('ldap client connectError: ' + err);
+//         });
 
-        ldapClient.on('error', function (err) {
-            loggerRef.error('ldap client error: ' + err);
-        });
+//         ldapClient.on('error', function (err) {
+//             loggerRef.error('ldap client error: ' + err);
+//         });
 
-        ldapClient.on('resultError', function (err) {
-            loggerRef.error('ldap client resultError: ' + err);
-        });
+//         ldapClient.on('resultError', function (err) {
+//             loggerRef.error('ldap client resultError: ' + err);
+//         });
 
-        ldapClient.on('socketTimeout', function (err) {
-            loggerRef.error('ldap socket timeout: ' + err);
-        });
+//         ldapClient.on('socketTimeout', function (err) {
+//             loggerRef.error('ldap socket timeout: ' + err);
+//         });
 
-        ldapClient.on('timeout', function (err) {
-            loggerRef.error('ldap client timeout: ' + err);
-        });
-        return ldapClient;
-    } catch (error) {
-        return Error(error);
-    }
-};
+//         ldapClient.on('timeout', function (err) {
+//             loggerRef.error('ldap client timeout: ' + err);
+//         });
+//         return ldapClient;
+//     } catch (error) {
+//         return Error(error);
+//     }
+// };
 
 module.exports = router;
