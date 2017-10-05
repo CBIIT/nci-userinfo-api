@@ -3,7 +3,6 @@ var apiRouter = express.Router();
 var ldap = require('ldapjs');
 var fs = require('fs');
 var js2xmlparser = require('js2xmlparser2');
-// var ldapClient;
 var configRef;
 var loggerRef;
 var tlsOptions;
@@ -25,36 +24,6 @@ var router = function (logger, config) {
     };
 
     var isNum = new RegExp('^[0-9]+$');
-
-    // ldapClient = ldap.createClient({
-    //     url: config.vds.host,
-    //     reconnect: true,
-    //     tlsOptions: tlsOptions,
-    //     idleTimeout: 15 * 60 * 1000,
-    //     timeout: 15 * 60 * 1000,
-    //     connectTimeout: 15 * 60 * 1000 // 15 mins
-    // });
-
-    // ldapClient.on('connectError', function (err) {
-    //     logger.error('ldap client connectError: ' + err + ' auto-reconnect.');
-    // });
-
-    // ldapClient.on('error', function (err) {
-    //     logger.error('ldap client error: ' + err + ' auto-reconnect.');
-    // });
-
-    // ldapClient.on('resultError', function (err) {
-    //     logger.error('ldap client resultError: ' + err + ' auto-reconnect.');
-    // });
-
-    // ldapClient.on('socketTimeout', function (err) {
-    //     logger.error('ldap socket timeout: ' + err + ' auto-reconnect.');
-    // });
-
-    // ldapClient.on('timeout', function (err) {
-    //     logger.error('ldap client timeout: ' + err + ' auto-reconnect.');
-    // });
-
 
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
@@ -112,7 +81,6 @@ const getUsers = async (userId, ic, logger, config) => {
         };
         var counter = 0;
         const ldapClient = await getLdapClient();
-        // console.log(ldapClient);
 
         ldapClient.bind(config.vds.dn, config.vds.password, function (err) {
 
