@@ -65,7 +65,7 @@ const reloadProperties = async () => {
  * @param {*} resultSet 
  * @param {*} collection 
  * @param {*} numRows
- * @return {string} "Wow!" 
+ * @return {string}  
  */
 const processnVisionResults = (connection, resultSet, collection, numRows) => (
     new Promise((resolve, reject) => {
