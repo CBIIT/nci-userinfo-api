@@ -1,17 +1,7 @@
-const base64LdapFields = [
-    'objectGUID',
-    'mS-DS-ConsistencyGuid',
-    'msExchArchiveGUID',
-    'msRTCSIP-UserRoutingGroupId',
-    'msExchMailboxGuid',
-    'objectSid',
-    'userCertificate',
-    'msExchSafeSendersHash',
-    'msExchUMSpokenName',
-    'userSMIMECertificate',
-    'msRTCSIP-UserRoutingGroupId',
-    'thumbnailPhoto'
-];
+const config = require(process.env.NODE_CONFIG_FILE_API);
+const base64LdapFields = config.vds.base64LdapFields;
+
+
 /** Converts specific fields in an LDAP result entry to  to base64.
  * @input entry 
  */

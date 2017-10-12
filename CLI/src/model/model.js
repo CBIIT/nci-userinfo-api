@@ -18,7 +18,8 @@ const reloadUsers = async () => {
     }
 
     try {
-        const users = await vdsConnector.getUsers(null, 'nimhd');
+        // const users = await vdsConnector.getUsers(null, 'nimhd');
+        const users = await vdsConnector.getUsers(null, 'nci');
         await collection.insertMany(users, {
             ordered: false
         });
@@ -49,11 +50,11 @@ const reloadProperties = async () => {
 
     try {
         const result = await nVisionConnector.getProperties();
-        await processnVisionResults(connection, result.resultSet, collection, 1000);
-        console.log('Properties reloaded!');
+        const resultMessage = await processnVisionResults(connection, result.resultSet, collection, 1000);
+        console.log(resultMessage);
 
     } catch (error) {
-        console.log('FATAL ERROR: ' + error);
+        console.log(error);
         process.exit();
     }
 
@@ -67,34 +68,25 @@ const reloadProperties = async () => {
  * @param {*} numRows
  * @return {string}  
  */
-const processnVisionResults = (connection, resultSet, collection, numRows) => (
-    new Promise((resolve, reject) => {
+const processnVisionResults = async (connection, resultSet, collection, numRows) => (
+    new Promise(async (resolve, reject) => {
         console.log('processing result set');
-        resultSet.getRows(
-            numRows,
-            (err, rows) => {
-                if (err) {
-                    console.log(err.message);
+        let moreResults = true;
+
+        while (moreResults) {
+            try {
+                let rows = await resultSet.getRows(numRows);
+                console.log('processing ' + rows.length + ' rows');
+                await collection.insertMany(rows, { ordered: false });
+                if (rows.length < numRows) {
+                    moreResults = false;
                     mongoConnector.releaseConnection(connection);
-                    reject('Reload of properties failed: ' + err.message);
-                } else if (rows.length > 0) {
-                    console.log('processing ' + rows.length + ' rows');
-                    collection.insertMany(rows, {
-                        ordered: false
-                    }, () => {
-                        if (rows.length === numRows) {
-                            processnVisionResults(connection, resultSet, collection, numRows);
-                        } else {
-                            mongoConnector.releaseConnection(connection);
-                            resolve('Properties Reloaded!');
-                        }
-                    });
-                } else {
-                    console.log('received ' + rows.length + ' results');
-                    mongoConnector.releaseConnection(connection);
-                    resolve('Properties Reloaded!');
+                    resolve('Properties reloaded');
                 }
-            });
+            } catch (error) {
+                reject(error);
+            }
+        }
     })
 );
 

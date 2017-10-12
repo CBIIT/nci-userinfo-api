@@ -26,6 +26,8 @@ const releaseConnection = (connection) => {
     connection.close(err => {
         if (err) {
             console.log(err.message);
+        } else {
+            console.log('DB Connection closed');
         }
     }
     );

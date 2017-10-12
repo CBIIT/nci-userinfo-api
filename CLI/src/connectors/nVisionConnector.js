@@ -9,12 +9,11 @@ const getConnection = () => {
 
 const getProperties = async () => {
     const connection = await getConnection();
+    
     const result = await connection.execute(
-        'SELECT * ' +
-        'FROM PROP_EDW.PROP_AGGR_LIFE_EXPTNCY_MV_VW',
+        config.nVision.propertyQuery,
         [],
         { resultSet: true, outFormat: oracledb.OBJECT });
-    // connection.close();
     return result;
 };
 
