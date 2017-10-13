@@ -14,7 +14,7 @@ var parserOptions = {
     }
 };
 
-var router = function (logger, config) {
+const router = (logger, config) => {
 
     loggerRef = logger;
     configRef = config;
@@ -194,6 +194,10 @@ const getLdapClient = async () => {
             timeout: 15 * 60 * 1000,
             connectTimeout: 15 * 60 * 1000 // 15 mins
         });
+
+        // for (let event of ['connectError', 'error', 'resultError', 'socketTimeout', 'timeout']) {
+        //     ldapClient.on(event, err => loggerRef.error(`ldap client error: ${err}`));
+        // }
 
         ldapClient.on('connectError', function (err) {
             loggerRef.error('ldap client connectError: ' + err);
