@@ -433,9 +433,9 @@ var router = function (logger, config) {
                 }
                 ];
 
-                sheet.getColumn(6).numFmt = '0.0';
-
                 keys = Object.keys(resultMap);
+
+                // sheet.getColumn(6).numFmt = '0.0';
 
                 keyOrder.forEach(function (key) {
                     console.log('exporting key ' + key);
@@ -446,7 +446,7 @@ var router = function (logger, config) {
                             u_average_it_electricity_usage: resultMap[key].u_average_it_electricity_usage,
                             u_automated_monitoring: resultMap[key].u_automated_monitoring,
                             u_server_utilization: resultMap[key].u_automated_monitoring.toLowerCase() === 'yes' ? resultMap[key].u_server_utilization : 'N.A.',
-                            u_total_ftes: resultMap[key].u_total_ftes,
+                            u_total_ftes: parseFloat((resultMap[key].u_total_ftes).toFixed(1)),
                             u_rack_count: resultMap[key].u_rack_count,
                             u_total_mainframes: resultMap[key].u_total_mainframes,
                             u_total_windows_servers: resultMap[key].u_total_windows_servers,
