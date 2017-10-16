@@ -15,8 +15,9 @@ var CLOSING_STAGE_MAP =
         'closing_migration_execution': 'Closing - 4. Migration Execution',
         'closing_equipment_removal': 'Closing - 5. Equipment Removal',
         'closed': 'Closed'
-    }; 
+    };
 
+const keyOrder = ['riverside_5', 'bldg_41_a224', 'bldg_37_b1042a', 'bldg_31', 'bldg_10', 'atc_warehouse', 'atc', '9609mc_tw202', '9609mc_te21'];
 
 var router = function (logger, config) {
 
@@ -188,7 +189,7 @@ var router = function (logger, config) {
                     if (category === 'Totals') {
                         // Only get the closing stage information from totals. The rest should come from the children records with categories 'Server', 'Storage', 'Data Center Management'
                         resultMap[dataCenterName].u_closing_stage = CLOSING_STAGE_MAP[o.u_closing_stage] || o.u_closing_stage;
-                        resultMap[dataCenterName].u_closing_on_quarter =  o.u_closing_on_quarter ? 'Q' + o.u_closing_on_quarter : '';
+                        resultMap[dataCenterName].u_closing_on_quarter = o.u_closing_on_quarter ? 'Q' + o.u_closing_on_quarter : '';
                         resultMap[dataCenterName].u_closing_on_fiscal_year = o.u_closing_on_fiscal_year;
 
 
@@ -436,28 +437,49 @@ var router = function (logger, config) {
 
                 keys = Object.keys(resultMap);
 
-                keys.forEach(function (key) {
+                keyOrder.forEach(function (key) {
                     console.log('exporting key ' + key);
-                    sheet.addRow({
-                        u_ic: resultMap[key].u_ic,
-                        u_data_call: resultMap[key].u_data_call,
-                        u_average_it_electricity_usage: resultMap[key].u_average_it_electricity_usage,
-                        u_automated_monitoring: resultMap[key].u_automated_monitoring,
-                        u_server_utilization: resultMap[key].u_automated_monitoring.toLowerCase() === 'yes' ? resultMap[key].u_server_utilization : 'N.A.',
-                        u_total_ftes: resultMap[key].u_total_ftes,
-                        u_rack_count: resultMap[key].u_rack_count,
-                        u_total_mainframes: resultMap[key].u_total_mainframes,
-                        u_total_windows_servers: resultMap[key].u_total_windows_servers,
-                        u_total_hpc_cluster_nodes: resultMap[key].u_total_hpc_cluster_nodes,
-                        u_total_other_servers: resultMap[key].u_total_other_servers,
-                        u_total_virtual_hosts: resultMap[key].u_total_virtual_hosts,
-                        u_total_virtual_os: resultMap[key].u_total_virtual_os,
-                        u_total_storage: resultMap[key].u_total_storage,
-                        u_used_storage: resultMap[key].u_used_storage,
-                        u_closing_stage: resultMap[key].u_closing_stage,
-                        u_closing_on_quarter: resultMap[key].u_closing_on_quarter,
-                        u_closing_on_fiscal_year: resultMap[key].u_closing_on_fiscal_year
-                    });
+                    if (key !== 'atc') {
+                        sheet.addRow({
+                            u_ic: resultMap[key].u_ic,
+                            u_data_call: resultMap[key].u_data_call,
+                            u_average_it_electricity_usage: resultMap[key].u_average_it_electricity_usage,
+                            u_automated_monitoring: resultMap[key].u_automated_monitoring,
+                            u_server_utilization: resultMap[key].u_automated_monitoring.toLowerCase() === 'yes' ? resultMap[key].u_server_utilization : 'N.A.',
+                            u_total_ftes: resultMap[key].u_total_ftes,
+                            u_rack_count: resultMap[key].u_rack_count,
+                            u_total_mainframes: resultMap[key].u_total_mainframes,
+                            u_total_windows_servers: resultMap[key].u_total_windows_servers,
+                            u_total_hpc_cluster_nodes: resultMap[key].u_total_hpc_cluster_nodes,
+                            u_total_other_servers: resultMap[key].u_total_other_servers,
+                            u_total_virtual_hosts: resultMap[key].u_total_virtual_hosts,
+                            u_total_virtual_os: resultMap[key].u_total_virtual_os,
+                            u_total_storage: resultMap[key].u_total_storage,
+                            u_used_storage: resultMap[key].u_used_storage,
+                            u_closing_stage: resultMap[key].u_closing_stage,
+                            u_closing_on_quarter: resultMap[key].u_closing_on_quarter,
+                            u_closing_on_fiscal_year: resultMap[key].u_closing_on_fiscal_year
+                        });
+                    } else {
+                        sheet.addRow({
+                            u_ic: 'NCI',
+                            u_data_call: 'ATC',
+                            u_average_it_electricity_usage: 0,
+                            u_automated_monitoring: 'no',
+                            u_server_utilization: 0,
+                            u_total_ftes: 0.1,
+                            u_rack_count: 0,
+                            u_total_mainframes: 0,
+                            u_total_windows_servers: 0,
+                            u_total_hpc_cluster_nodes: 0,
+                            u_total_other_servers: 1,
+                            u_total_virtual_hosts: 0,
+                            u_total_virtual_os: 0,
+                            u_total_storage: 0,
+                            u_used_storage: 0
+                        });
+                    }
+
                 });
 
                 const exportFile = config.sn.tempLocation + 'UtilizationReport_Q' + req.params.quarter + '.xlsx';
