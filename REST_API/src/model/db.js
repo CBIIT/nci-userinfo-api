@@ -6,8 +6,7 @@ const MongoClient = mongodb.MongoClient;
 const getProperties = async () => {
     const connection = await getConnection();
     const collection = connection.collection(config.db.properties_collection);
-    console.log(collection);
-    const results = await collection.find({}).limit(10).toArray();
+    const results = await collection.find({},{_id: 0}).limit(100).toArray();
 
     return results;
 };
