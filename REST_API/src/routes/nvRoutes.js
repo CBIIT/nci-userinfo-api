@@ -1,5 +1,5 @@
 const express = require('express');
-const propRouter = express.Router();
+const nvRouter = express.Router();
 var js2xmlparser = require('js2xmlparser2');
 const { getProperties } = require('../model/db');
 
@@ -12,7 +12,7 @@ const parserOptions = {
 const router = () => {
 
 
-    propRouter.route('/props')
+    nvRouter.route('/props')
         .get(async (req, res) => {
 
             try {
@@ -27,7 +27,7 @@ const router = () => {
             }
         });
 
-    return propRouter;
+    return nvRouter;
 };
 
 
