@@ -18,12 +18,7 @@ const reloadUsers = async () => {
     }
 
     try {
-        // const users = await vdsConnector.getUsers(null, 'nimhd');
         const users = await vdsConnector.getUsers(null, 'nci');
-        for (let user of users) {
-            const normalizedName = user.SN + user.GIVENNAME + (user.MIDDLENAME || '');
-            user.normalizedName = normalizedName.replace(/[^0-9a-z]/gi, '').toUpperCase();
-        }
         await collection.insertMany(users, {
             ordered: false
         });
@@ -81,26 +76,13 @@ const processnVisionResults = async (resultSet) => (
             process.exit();
         }
 
+        const nedIdMap = {};
+
         while (moreResults) {
             try {
                 let rows = await resultSet.getRows(numRows);
                 console.log('processing ' + rows.length + ' rows');
-
-                for (let row of rows) {
-
-                    const fullName = row.FULL_NAME.replace(/[^0-9a-z]/gi, '');
-                    let results = await usersCollection.find({ normalizedName: { $regex: '^' + fullName, $options: 'i' } }).toArray();
-                    if (results.length === 1) {
-                        row.nedId = results[0].UNIQUEIDENTIFIER;
-                    } else if (results.length > 1) {
-                        row.nedId = results.map(r => r.UNIQUEIDENTIFIER).join(' or ');
-                        console.log('multiple results for : ' + row.FULL_NAME);
-                    } else {
-                        // ignore
-                    }
-                }
-
-                await propsCollection.insertMany(rows.filter(row => { return row.nedId; }), { ordered: false });
+                await propsCollection.insertMany(rows, { ordered: false });
                 if (rows.length < numRows) {
                     moreResults = false;
                     mongoConnector.releaseConnection(connection);
