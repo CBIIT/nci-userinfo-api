@@ -6,7 +6,15 @@ const MongoClient = mongodb.MongoClient;
 const getProperties = async () => {
     const connection = await getConnection();
     const collection = connection.collection(config.db.properties_collection);
-    const results = await collection.find({},{_id: 0}).limit(100).toArray();
+    const results = await collection.find({}, { _id: 0 }).toArray();
+
+    return results;
+};
+
+const getPropertiesForUser = async (nihId) => {
+    const connection = await getConnection();
+    const collection = connection.collection(config.db.properties_collection);
+    const results = await collection.find({ CURR_NED_ID: nihId }, { _id: 0 }).toArray();
 
     return results;
 };
@@ -22,4 +30,4 @@ const getConnection = () => {
 };
 
 
-module.exports = {getProperties};
+module.exports = { getProperties, getPropertiesForUser };
