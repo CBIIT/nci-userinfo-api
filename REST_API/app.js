@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
 var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
 var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
-let propRouter = require('./src/routes/nvRoutes')();
+let propRouter = require('./src/routes/nvRoutes')(logger);
 
 app.use('/api/util', utilRouter);
 

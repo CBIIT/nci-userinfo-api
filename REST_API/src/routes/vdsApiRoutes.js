@@ -29,12 +29,14 @@ const router = (logger, config) => {
         .get(function (req, res) {
 
             getUsers(null, req.params.ic, logger, config)
-                .then(function (users) {
+                .then(function (err, users) {
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
                     } else {
                         res.send(users);
                     }
+                }).catch(function (err) {
+                    res.status(500).send(err);
                 });
         });
 
@@ -59,6 +61,8 @@ const router = (logger, config) => {
                     } else {
                         res.send(users);
                     }
+                }).catch(function (err) {
+                    res.status(500).send(err);
                 });
         });
     return apiRouter;
@@ -93,7 +97,7 @@ const getUsers = async (userId, ic, logger, config) => {
             logger.info('starting search');
             ldapClient.search(config.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
-                    logger.error('error: ' + err.code);
+                    reject(Error(err.message));
                 }
                 ldapRes.on('searchEntry', function (entry) {
                     if (++counter % 10000 === 0) {
@@ -185,7 +189,7 @@ const getUsers = async (userId, ic, logger, config) => {
 
 
 const getLdapClient = async () => {
- 
+
     try {
         const ldapClient = await ldap.createClient({
             url: configRef.vds.host,
