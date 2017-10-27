@@ -1,7 +1,7 @@
 const express = require('express');
 const nvRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
-const { getProperties, getPropertiesForUser } = require('../model/db');
+const { getProperties, getPropertiesForUser, getOrphanedProperties } = require('../model/db');
 const logger = require('../config/log');
 
 const parserOptions = {
@@ -34,6 +34,20 @@ const router = () => {
             logger.info('Getting properties for ' + nihId);
             try {
                 const props = await getPropertiesForUser(nihId);
+                if (req.accepts('xml')) {
+                    res.send(js2xmlparser('properties', props, parserOptions));
+                } else {
+                    res.send(props);
+                }
+            } catch (error) {
+                return error;
+            }
+        });
+
+    nvRouter.route('/props/orphaned')
+        .get(async (req, res) => {
+            try {
+                const props = await getOrphanedProperties();
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
                 } else {

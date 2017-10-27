@@ -19,6 +19,54 @@ const getPropertiesForUser = async (nihId) => {
     return results;
 };
 
+const getOrphanedProperties = async () => {
+
+    const connection = await getConnection();
+    const propsCollection = connection.collection(config.db.properties_collection);
+    const usersCollection = connection.collection(config.db.users_collection);
+
+    let nvNedIds = [];
+    try {
+        nvNedIds = await propsCollection.distinct('CURR_NED_ID');
+        nvNedIds = nvNedIds.sort();
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+    let vdsNedIds = [];
+    try {
+        vdsNedIds = await usersCollection.distinct('UNIQUEIDENTIFIER');
+        vdsNedIds = vdsNedIds.sort();
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+    let left = nvNedIds.shift();
+    let right = vdsNedIds.shift();
+    let orphaned = [];
+    while (left) {
+        if (left && left === right) {
+            // do nothing
+            left = nvNedIds.shift();
+            right = vdsNedIds.shift();
+        } else if (right && (!left || left > right)) {
+            // user without properties - ignore.
+            right = vdsNedIds.shift();
+        } else if (left && (!right || left < right)) {
+
+            // orphaned property on left
+            orphaned.push(left);
+            left = nvNedIds.shift();
+        }
+    }
+
+    // const results = await propsCollection.find({ CURR_NED_ID: { $in: orphaned } }).limit(5).toArray();
+
+    return orphaned.sort();
+};
+
 const getConnection = () => {
 
     try {
@@ -30,4 +78,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { getProperties, getPropertiesForUser };
+module.exports = { getProperties, getPropertiesForUser, getOrphanedProperties };
