@@ -2,6 +2,7 @@ var express = require('express');
 var basicAuth = require('express-basic-auth');
 var bodyParser = require('body-parser');
 var config = require(process.env.NODE_CONFIG_FILE_API);
+var compression = require('compression');
 
 var logger = require('./src/config/log');
 
@@ -14,6 +15,7 @@ authObject[config.basicauth.user] = config.basicauth.password;
 // Don't add routes before this line! All routes pass through the require https filter.
 app.use(requireHTTPS);
 app.use(bodyParser.json());
+app.use(compression());
 
 var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
 var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
@@ -27,6 +29,7 @@ app.use('/api/util', utilRouter);
 app.use(basicAuth({
     users: authObject
 }));
+
 // Routes after this line require basic authentication
 app.use('/api/vds', vdsApiRouter);
 app.use('/api/ned', nedApiRouter);
