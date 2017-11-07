@@ -6,7 +6,7 @@ const util = require('../util/api-util');
 
 const updateNedChanges = async () => {
     const connection = await mongoConnector.getConnection();
-    logger.info('Starting ned changes update');
+    logger.info('Starting NED changes update');
     const collection = connection.collection(config.db.ned_changes_collection);
     const adminCollection = connection.collection(config.db.admin_collection);
 
