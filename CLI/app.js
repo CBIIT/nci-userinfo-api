@@ -1,6 +1,6 @@
 const program = require('commander');
 const assert = require('assert');
-const { reloadUsers, reloadProperties, reloadFredUsers } = require('./src/model/model');
+const { reloadUsers, reloadProperties, reloadFredUsers, updateUsers, updateNedChanges } = require('./src/model/model');
 
 
 program
@@ -22,6 +22,18 @@ program
     .description('Drops and reloads Fred users')
     .action(() => {
         reloadFredUsers();
+    });
+program
+    .command('updateUsers')
+    .description('Updates VDS users')
+    .action(() => {
+        updateUsers();
+    });
+program
+    .command('updateNedChanges')
+    .description('Fetches the latest NED changes')
+    .action(() => {
+        updateNedChanges();
     });
 
 program.parse(process.argv);

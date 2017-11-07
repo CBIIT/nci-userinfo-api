@@ -1,7 +1,7 @@
 module.exports = {
     ts: function () {
         var now = new Date();
-        return 'TS(UTC):' + now.getTime() + ' ### ' + now.toLocaleString() + ' ### '; 
+        return 'TS(UTC):' + now.getTime() + ' ### ' + now.toLocaleString() + ' ### ';
     },
 
 
@@ -51,6 +51,22 @@ module.exports = {
         var result = start.substring(0, start.indexOf(',')).trim();
 
         return result;
+    },
+
+    getCurrentDate: () => {
+
+        const pad = (value) => {
+            return value >= 10 ? value : '0' + value;
+        };
+
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hour = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        const seconds = pad(date.getSeconds());
+        return { date: year + '-' + month + '-' + day, time: hour + ':' + minutes + ':' + seconds };
     }
 
 };

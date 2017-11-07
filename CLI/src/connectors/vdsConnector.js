@@ -18,7 +18,7 @@ const getUsers = (userId, ic) => {
 
         var userSearchOptions = {
             scope: 'sub',
-            attributes: config.vds.user_attributes,
+            // attributes: config.vds.user_attributes,
             filter: filter,
             paged: true
         };
@@ -47,7 +47,7 @@ const getUsers = (userId, ic) => {
                 });
                 ldapRes.on('searchReference', () => { });
                 ldapRes.on('page', () => {
-                    logger.info('page end');
+                    // logger.info('page end');
                 });
                 ldapRes.on('error', (err) => {
                     ldapClient.destroy();
