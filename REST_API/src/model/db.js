@@ -1,27 +1,24 @@
 const config = require(process.env.NODE_CONFIG_FILE_API);
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
-
+let connection = null;
 
 const getProperties = async () => {
-    const connection = await getConnection();
+    const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
     const results = await collection.find({}, { _id: 0 }).toArray();
-
     return results;
 };
 
 const getPropertiesForUser = async (nihId) => {
-    const connection = await getConnection();
+    const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
     const results = await collection.find({ CURR_NED_ID: nihId }, { _id: 0 }).toArray();
-
     return results;
 };
 
 const getOrphanedProperties = async () => {
-
-    const connection = await getConnection();
+    const connection = getConnection();
     const propsCollection = connection.collection(config.db.properties_collection);
     const usersCollection = connection.collection(config.db.users_collection);
 
@@ -67,15 +64,23 @@ const getOrphanedProperties = async () => {
     return orphaned.sort();
 };
 
-const getConnection = () => {
+const initDbConnection = () => {
 
-    try {
-        const connection = MongoClient.connect(config.db.url);
-        return connection;
-    } catch (error) {
-        return Error(error);
-    }
+    return new Promise(async (resolve, reject) => {
+        try {
+            connection = await MongoClient.connect(config.db.url, { poolSize: 10 });
+            resolve();
+        } catch (error) {
+            console.log('here');
+            reject(error);
+        }
+    });
+
+};
+
+const getConnection = () => {
+    return connection;
 };
 
 
-module.exports = { getProperties, getPropertiesForUser, getOrphanedProperties };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties };

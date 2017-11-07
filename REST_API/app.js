@@ -5,43 +5,61 @@ var config = require(process.env.NODE_CONFIG_FILE_API);
 var compression = require('compression');
 
 var logger = require('./src/config/log');
+const { initDbConnection } = require('./src/model/db');
+
+process.on('unhandledRejection', (reason, p) => {
+    logger.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
+    process.exit(1);
+    // application specific logging, throwing an error, or other logic here
+});
 
 logger.info('Starting app...');
 var app = express();
 
-var authObject = {};
-authObject[config.basicauth.user] = config.basicauth.password;
+(async () => {
 
-// Don't add routes before this line! All routes pass through the require https filter.
-app.use(requireHTTPS);
-app.use(bodyParser.json());
-app.use(compression());
-
-var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
-var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
-var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
-let propRouter = require('./src/routes/nvRoutes')(logger);
-
-app.use('/api/util', utilRouter);
-
-
-// Enforce authentication
-app.use(basicAuth({
-    users: authObject
-}));
-
-// Routes after this line require basic authentication
-app.use('/api/vds', vdsApiRouter);
-app.use('/api/ned', nedApiRouter);
-app.use('/api/nv', propRouter);
-
-
-var server = require('./src/server/server');
-server.create(logger, config, app, function (err) {
-    if (err) {
-        logger.error('Error: Could not start server!');
+    try {
+        await initDbConnection();
+    } catch (error) {
+        logger.error('Fatal Error: ' + error.message);
+        process.exit(1);
     }
-});
+
+    var authObject = {};
+    authObject[config.basicauth.user] = config.basicauth.password;
+
+    // Don't add routes before this line! All routes pass through the require https filter.
+    app.use(requireHTTPS);
+    app.use(bodyParser.json());
+    app.use(compression());
+
+    var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
+    var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
+    var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
+    let propRouter = require('./src/routes/nvRoutes')(logger);
+
+    app.use('/api/util', utilRouter);
+
+
+    // Enforce authentication
+    app.use(basicAuth({
+        users: authObject
+    }));
+
+    // Routes after this line require basic authentication
+    app.use('/api/vds', vdsApiRouter);
+    app.use('/api/ned', nedApiRouter);
+    app.use('/api/nv', propRouter);
+
+
+    var server = require('./src/server/server');
+    server.create(logger, config, app, function (err) {
+        if (err) {
+            logger.error('Error: Could not start server!');
+        }
+    });
+
+})();
 
 // Helper functions
 function requireHTTPS(req, res, next) {
