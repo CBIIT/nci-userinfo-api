@@ -1,40 +1,39 @@
+const logger = require('./src/config/log');
 const program = require('commander');
 const assert = require('assert');
-const { reloadUsers, reloadProperties, reloadFredUsers, updateUsers, updateNedChanges } = require('./src/model/model');
+const nvModel = require('./src/model/nvModel');
+const vdsModel = require('./src/model/vdsModel');
+const nedModel = require('./src/model/nedModel');
+const fredModel = require('./src/model/fredModel');
 
 
 program
     .version('0.0.1')
     .description('User Info Management');
-
 program
-    .command('reloadUsers')
-    .description('Drops and reloads users collection')
-    .action(reloadUsers);
+    .command('reloadVDSUsers')
+    .description('Drops and reloads VDS users collection')
+    .action(() => { vdsModel.reloadUsers() });
 program
-    .command('reloadProperties')
-    .description('Drops and reloads properties collection')
-    .action(() => {
-        reloadProperties();
-    });
+    .command('updateVDSUsers')
+    .description('Updates VDS users without drop')
+    .action(() => { vdsModel.updateUsers() });
 program
-    .command('reloadFredUsers')
-    .description('Drops and reloads Fred users')
-    .action(() => {
-        reloadFredUsers();
-    });
-program
-    .command('updateUsers')
-    .description('Updates VDS users')
-    .action(() => {
-        updateUsers();
-    });
+    .command('reloadNVProperties')
+    .description('Drops and reloads nVision properties collection')
+    .action(() => { nvModel.reloadProperties() });
 program
     .command('updateNedChanges')
     .description('Fetches the latest NED changes')
-    .action(() => {
-        updateNedChanges();
-    });
+    .action(() => { nedModel.updateNedChanges() });
+program
+    .command('reloadFredUsers')
+    .description('Drops and reloads Fred users')
+    .action(() => { fredModel.reloadUsers(); });
+program
+    .command('reloadFredProperties')
+    .description('Updates Fred properties')
+    .action(() => { fredModel.reloadProperties(); });
 
 program.parse(process.argv);
 

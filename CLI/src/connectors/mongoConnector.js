@@ -1,5 +1,6 @@
 const config = require(process.env.NODE_CONFIG_FILE_API);
 const MongoClient = require('mongodb').MongoClient;
+const logger = require('winston');
 const assert = require('assert');
 
 var connection;
@@ -14,7 +15,7 @@ const getConnection = () => {
                     reject(err.message);
                 }
                 assert.equal(null, err);
-                console.log('DB Connection successful');
+                logger.info('Mongo Connection successful');
                 connection = database;
                 resolve(connection);
             });
@@ -25,9 +26,9 @@ const getConnection = () => {
 const releaseConnection = (connection) => {
     connection.close(err => {
         if (err) {
-            console.log(err.message);
+            logger.error(err.message);
         } else {
-            console.log('DB Connection closed');
+            logger.info('Mongo Connection closed');
         }
     }
     );

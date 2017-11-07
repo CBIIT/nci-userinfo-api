@@ -5,7 +5,7 @@ const soap = require('soap');
 const wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
 const wsdl = config.ned.wsdl_changes;
 
-const getChanges = async (obj) => {
+const getChanges = (obj) => {
     let args = {
         ICorSITE: obj.ic,
         From_Date: obj.fromDate,
@@ -23,7 +23,7 @@ const getChanges = async (obj) => {
         args.To_time = obj.toTime;
     }
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
         soap.createClient(wsdl, (err, soapClient) => {
             soapClient.setSecurity(wsSecurity);

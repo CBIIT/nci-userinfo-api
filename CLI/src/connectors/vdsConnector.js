@@ -1,5 +1,5 @@
 const config = require(process.env.NODE_CONFIG_FILE_API);
-const logger = require('../config/log');
+const logger = require('winston');
 const ldap = require('ldapjs');
 const fs = require('fs');
 const tlsOptions = {
