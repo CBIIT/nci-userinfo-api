@@ -3,7 +3,7 @@ const logger = require('winston');
 const express = require('express');
 const fredRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
-const { getFredProperties, getFredUsers } = require('../model/db');
+const { getFredProperties, getFredUsers, getFredPropertiesForUser, getFredUserById } = require('../model/db');
 
 
 const parserOptions = {
@@ -30,6 +30,22 @@ const router = () => {
             }
         });
 
+    fredRouter.route('/props/user/:nihId')
+        .get(async (req, res) => {
+            const nihId = req.params.nihId;
+            logger.info('Getting properties for ' + nihId);
+            try {
+                const props = await getFredPropertiesForUser(nihId);
+                if (req.accepts('xml')) {
+                    res.send(js2xmlparser('properties', props, parserOptions));
+                } else {
+                    res.send(props);
+                }
+            } catch (error) {
+                return error;
+            }
+        });
+
 
     fredRouter.route('/users')
         .get(async (req, res) => {
@@ -37,9 +53,25 @@ const router = () => {
             try {
                 const users = await getFredUsers();
                 if (req.accepts('xml')) {
-                    res.send(js2xmlparser('properties', users, parserOptions));
+                    res.send(js2xmlparser('users', users, parserOptions));
                 } else {
                     res.send(users);
+                }
+            } catch (error) {
+                return error;
+            }
+        });
+
+    fredRouter.route('/users/user/:nihId')
+        .get(async (req, res) => {
+            const nihId = req.params.nihId;
+            logger.info('Getting Fred user ' + nihId);
+            try {
+                const user = await getFredUserById(nihId);
+                if (req.accepts('xml')) {
+                    res.send(js2xmlparser('user', user, parserOptions));
+                } else {
+                    res.send(user);
                 }
             } catch (error) {
                 return error;

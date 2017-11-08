@@ -78,6 +78,20 @@ const getFredProperties = async () => {
     return results;
 };
 
+const getFredPropertiesForUser = async (nihId) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_properties_collection);
+    const results = await collection.find({ PropertyOfficeNedId: nihId }, { _id: 0 }).toArray();
+    return results;
+};
+
+const getFredUserById = async (nihId) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_users_collection);
+    const results = await collection.findOne({ NedId: nihId }, { _id: 0 });
+    return results;
+};
+
 const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -96,4 +110,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesForUser, getFredUserById };
