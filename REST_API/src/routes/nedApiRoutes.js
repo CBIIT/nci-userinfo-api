@@ -1,16 +1,18 @@
-var express = require('express');
-var apiRouter = express.Router();
-var WSSecurity = require('wssecurity');
-var soap = require('soap');
-var js2xmlparser = require('js2xmlparser2');
+'use strict';
+const { config } = require('../../constants');
+const express = require('express');
+const apiRouter = express.Router();
+const WSSecurity = require('wssecurity');
+const soap = require('soap');
+const js2xmlparser = require('js2xmlparser2');
 
-var parserOptions = {
+const parserOptions = {
     wrapArray: {
         enabled: true
     }
 };
 
-var router = function (logger, config) {
+const router = () => {
 
     var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
 

@@ -20,6 +20,7 @@
     "node-rest-client": "^3.1.0",
     "soap": "^0.19.2",
     "ssl-root-cas": "^1.2.3",
+    "use-strict": "^1.0.1",
     "winston": "^2.3.1",
     "wssecurity": "^0.2.4"
   },

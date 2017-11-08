@@ -1,10 +1,10 @@
-var express = require('express');
-var basicAuth = require('express-basic-auth');
-var bodyParser = require('body-parser');
-var config = require(process.env.NODE_CONFIG_FILE_API);
-var compression = require('compression');
-
-var logger = require('./src/config/log');
+'use strict';
+const { config } = require('./constants');
+const express = require('express');
+const basicAuth = require('express-basic-auth');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const logger = require('./src/config/log');
 const { initDbConnection } = require('./src/model/db');
 
 process.on('unhandledRejection', (reason, p) => {
@@ -33,10 +33,11 @@ var app = express();
     app.use(bodyParser.json());
     app.use(compression());
 
-    var vdsApiRouter = require('./src/routes/vdsApiRoutes')(logger, config);
-    var nedApiRouter = require('./src/routes/nedApiRoutes')(logger, config);
-    var utilRouter = require('./src/routes/excelApiRoutes')(logger, config);
-    let propRouter = require('./src/routes/nvRoutes')(logger);
+    let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
+    let nedApiRouter = require('./src/routes/nedApiRoutes')();
+    let utilRouter = require('./src/routes/excelApiRoutes')();
+    let propRouter = require('./src/routes/nvRoutes')();
+    let fredRouter = require('./src/routes/fredRoutes')();
 
     app.use('/api/util', utilRouter);
 
@@ -50,12 +51,14 @@ var app = express();
     app.use('/api/vds', vdsApiRouter);
     app.use('/api/ned', nedApiRouter);
     app.use('/api/nv', propRouter);
+    app.use('/api/fred', fredRouter);
 
 
     var server = require('./src/server/server');
-    server.create(logger, config, app, function (err) {
+    server.create(app, function (err) {
         if (err) {
             logger.error('Error: Could not start server!');
+            process.exit(1);
         }
     });
 

@@ -1,6 +1,9 @@
-var fs = require( 'fs' );
-var http = require( 'http' );
-var https = require( 'https' );
+'use strict';
+const { config } = require('../../constants');
+const logger = require('winston');
+const fs = require( 'fs' );
+const http = require( 'http' );
+const https = require( 'https' );
 
 function setup( ssl ) {
     if ( ssl && ssl.active ) {
@@ -12,7 +15,7 @@ function setup( ssl ) {
 }
 
 module.exports = {
-    create: function ( logger, config, app, cb ) {
+    create: function ( app, cb ) {
         var options = setup( config.ssl );
         http.createServer( app ).listen( config.web.http_port, cb );
         logger.info( 'Accepting http requests on port ' + config.web.http_port );

@@ -1,11 +1,13 @@
-var express = require('express');
-var excelApiRouter = express.Router();
-var RestClient = require('node-rest-client').Client;
-var Excel = require('exceljs');
+'use strict';
+const { config } = require('../../constants');
+const express = require('express');
+const excelApiRouter = express.Router();
+const RestClient = require('node-rest-client').Client;
+const Excel = require('exceljs');
 
-var restClient = new RestClient();
+const restClient = new RestClient();
 
-var CLOSING_STAGE_MAP =
+const CLOSING_STAGE_MAP =
     {
         'not_closing': 'Not Closing',
         'considering': 'Considering',
@@ -19,7 +21,7 @@ var CLOSING_STAGE_MAP =
 
 const keyOrder = ['riverside_5', 'bldg_41_a224', 'bldg_37_b1042a', 'bldg_31', 'bldg_10', 'atc_warehouse', 'atc', '9609mc_tw202', '9609mc_te21'];
 
-var router = function (logger, config) {
+var router = function () {
 
     excelApiRouter.route('/UtilizationReport/fiscalyear/:year/quarter/:quarter')
         .get(function (req, res) {
@@ -31,7 +33,7 @@ var router = function (logger, config) {
                 }
             };
 
-            restClient.get(config.sn.utilizationURL, args, function (data, response) {
+            restClient.get(config.sn.utilizationURL, args, function (data) {
 
                 var resultArr = data.result;
 

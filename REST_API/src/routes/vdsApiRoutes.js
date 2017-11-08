@@ -1,11 +1,14 @@
-var express = require('express');
-var apiRouter = express.Router();
-var ldap = require('ldapjs');
-var fs = require('fs');
-var js2xmlparser = require('js2xmlparser2');
-var configRef;
-var loggerRef;
-var tlsOptions;
+'use strict';
+const { config } = require('../../constants');
+const logger = require('winston');
+const express = require('express');
+const apiRouter = express.Router();
+const ldap = require('ldapjs');
+const fs = require('fs');
+const js2xmlparser = require('js2xmlparser2');
+const tlsOptions = {
+    ca: [fs.readFileSync(config.vds.vdscert)]
+};
 
 
 var parserOptions = {
@@ -14,21 +17,14 @@ var parserOptions = {
     }
 };
 
-const router = (logger, config) => {
-
-    loggerRef = logger;
-    configRef = config;
-
-    tlsOptions = {
-        ca: [fs.readFileSync(config.vds.vdscert)]
-    };
+const router = () => {
 
     var isNum = new RegExp('^[0-9]+$');
 
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
 
-            getUsers(null, req.params.ic, logger, config)
+            getUsers(null, req.params.ic)
                 .then(function (err, users) {
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
@@ -54,7 +50,7 @@ const router = (logger, config) => {
                 return;
             }
 
-            getUsers(nihId, '*', logger, config)
+            getUsers(nihId, '*')
                 .then(function (users) {
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
@@ -68,7 +64,7 @@ const router = (logger, config) => {
     return apiRouter;
 };
 
-const getUsers = async (userId, ic, logger, config) => {
+const getUsers = async (userId, ic) => {
 
     return new Promise(async function (resolve, reject) {
 
@@ -192,7 +188,7 @@ const getLdapClient = async () => {
 
     try {
         const ldapClient = await ldap.createClient({
-            url: configRef.vds.host,
+            url: config.vds.host,
             tlsOptions: tlsOptions,
             idleTimeout: 15 * 60 * 1000,
             timeout: 15 * 60 * 1000,
@@ -200,27 +196,27 @@ const getLdapClient = async () => {
         });
 
         // for (let event of ['connectError', 'error', 'resultError', 'socketTimeout', 'timeout']) {
-        //     ldapClient.on(event, err => loggerRef.error(`ldap client error: ${err}`));
+        //     ldapClient.on(event, err => logger.error(`ldap client error: ${err}`));
         // }
 
         ldapClient.on('connectError', function (err) {
-            loggerRef.error('ldap client connectError: ' + err);
+            logger.error('ldap client connectError: ' + err);
         });
 
         ldapClient.on('error', function (err) {
-            loggerRef.error('ldap client error: ' + err);
+            logger.error('ldap client error: ' + err);
         });
 
         ldapClient.on('resultError', function (err) {
-            loggerRef.error('ldap client resultError: ' + err);
+            logger.error('ldap client resultError: ' + err);
         });
 
         ldapClient.on('socketTimeout', function (err) {
-            loggerRef.error('ldap socket timeout: ' + err);
+            logger.error('ldap socket timeout: ' + err);
         });
 
         ldapClient.on('timeout', function (err) {
-            loggerRef.error('ldap client timeout: ' + err);
+            logger.error('ldap client timeout: ' + err);
         });
         return ldapClient;
     } catch (error) {

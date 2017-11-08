@@ -1,8 +1,9 @@
+'use strict';
+const logger = require('winston');
 const express = require('express');
 const nvRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
 const { getProperties, getPropertiesForUser, getOrphanedProperties } = require('../model/db');
-const logger = require('../config/log');
 
 const parserOptions = {
     wrapArray: {

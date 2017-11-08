@@ -1,3 +1,4 @@
+'use strict';
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var eslint = require('gulp-eslint');

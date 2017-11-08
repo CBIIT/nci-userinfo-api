@@ -1,24 +1,24 @@
-const winston = require('winston');
+'use strict';
+var logger = require('winston');
 
 const rotationSize = 100000000; // Bytes
 const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info';
 
-const logger = new (winston.Logger)({
-    level: logLevel,
-    transports: [
-        new (winston.transports.Console)({
-            timestamp: function () {
-                return new Date().toLocaleString();
-            }
-        }),
-        new (winston.transports.File)({
-            filename: process.env.NODE_LOG_FILE_API,
-            maxsize: rotationSize,
-            timestamp: function () {
-                return new Date().toLocaleString();
-            }
-        })
-    ]
+logger.level = logLevel;
+
+logger.remove(logger.transports.Console);
+logger.add(logger.transports.Console, {
+    timestamp: function () {
+        return new Date().toLocaleString();
+    }
+});
+
+logger.add(logger.transports.File, {
+    filename: process.env.NODE_LOG_FILE_API,
+    maxsize: rotationSize,
+    timestamp: function () {
+        return new Date().toLocaleString();
+    }
 });
 
 logger.info('Log file: ' + process.env.NODE_LOG_FILE_API);

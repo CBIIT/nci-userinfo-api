@@ -1,4 +1,6 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
+const logger = require('winston');
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 let connection = null;
@@ -27,7 +29,7 @@ const getOrphanedProperties = async () => {
         nvNedIds = await propsCollection.distinct('CURR_NED_ID');
         nvNedIds = nvNedIds.sort();
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         return error;
     }
 
@@ -36,7 +38,7 @@ const getOrphanedProperties = async () => {
         vdsNedIds = await usersCollection.distinct('UNIQUEIDENTIFIER');
         vdsNedIds = vdsNedIds.sort();
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         return error;
     }
 
@@ -59,19 +61,30 @@ const getOrphanedProperties = async () => {
         }
     }
 
-    // const results = await propsCollection.find({ CURR_NED_ID: { $in: orphaned } }).limit(5).toArray();
-
     return orphaned.sort();
 };
 
-const initDbConnection = () => {
+const getFredUsers = async () => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_users_collection);
+    const results = await collection.find({}, { _id: 0 }).toArray();
+    return results;
+};
 
+const getFredProperties = async () => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_properties_collection);
+    const results = await collection.find({}, { _id: 0 }).toArray();
+    return results;
+};
+
+const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
+           
             connection = await MongoClient.connect(config.db.url, { poolSize: 10 });
             resolve();
         } catch (error) {
-            console.log('here');
             reject(error);
         }
     });
@@ -83,4 +96,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers };
