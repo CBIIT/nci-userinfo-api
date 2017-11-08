@@ -34,33 +34,38 @@ const updateUsers = async () => {
     const connection = await mongoConnector.getConnection();
     logger.info('Starting user collection update');
     const collection = connection.collection(config.db.users_collection);
-    const bulk = await collection.initializeUnorderedBulkOp();
     try {
-        bulk.find({}).update({
-            $set: { ReturnedByVDS: false }
-        });
-        await bulk.execute();
+        await collection.update({}, { $set: { ReturnedByVDS: false } }, { upsert: false, multi: true });
         logger.info('ReturnedByVDS flag set to false on all user records');
 
     } catch (error) {
         logger.error('FATAL ERROR: ' + error);
-        process.exit();
+        process.exit(1);
     }
 
     try {
         logger.info('Getting VDS users');
         const users = await vdsConnector.getUsers(null, 'nci');
         logger.info('Updating user records');
+        const ops = [];
+
         users.forEach(user => {
-            bulk.find({ UNIQUEIDENTIFIER: user.UNIQUEIDENTIFIER }).upsert().replaceOne(user);
+            ops.push({
+                replaceOne:
+                {
+                    filter: { UNIQUEIDENTIFIER: user.UNIQUEIDENTIFIER },
+                    replacement: user,
+                    upsert: true
+                }
+            });
         });
-        await bulk.execute();
+        await collection.bulkWrite(ops);
         logger.info('User records updated');
         logger.info('Goodbye!');
-        process.exit();
+        process.exit(0);
     } catch (error) {
         logger.error('FATAL ERROR: ' + error);
-        process.exit();
+        process.exit(1);
     }
 };
 
