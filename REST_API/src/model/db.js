@@ -78,12 +78,19 @@ const getFredProperties = async () => {
     return results;
 };
 
-const getFredPropertiesForUser = async (nihId) => {
+const getFredPropertiesByPropertyOfficer = async (propertyOfficerNedId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
-    const results = await collection.find({ PropertyOfficeNedId: nihId }, { _id: 0 }).toArray();
+    const results = await collection.find({ PropertyOfficeNedId: propertyOfficerNedId }, { _id: 0 }).toArray();
     return results;
-};
+}
+
+const getFredPropertiesByCustodian = async (custodianNedId) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_properties_collection);
+    const results = await collection.find({ CustodianNedId: custodianNedId }, { _id: 0 }).toArray();
+    return results;
+}
 
 const getFredUserById = async (nihId) => {
     const connection = getConnection();
@@ -95,7 +102,7 @@ const getFredUserById = async (nihId) => {
 const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
-           
+
             connection = await MongoClient.connect(config.db.url, { poolSize: 10 });
             resolve();
         } catch (error) {
@@ -110,4 +117,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesForUser, getFredUserById };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById };

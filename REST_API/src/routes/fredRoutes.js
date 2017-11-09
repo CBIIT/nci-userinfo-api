@@ -3,7 +3,7 @@ const logger = require('winston');
 const express = require('express');
 const fredRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
-const { getFredProperties, getFredUsers, getFredPropertiesForUser, getFredUserById } = require('../model/db');
+const { getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById } = require('../model/db');
 
 
 const parserOptions = {
@@ -30,12 +30,28 @@ const router = () => {
             }
         });
 
-    fredRouter.route('/props/user/:nihId')
+    fredRouter.route('/props/officer/:nihId')
         .get(async (req, res) => {
             const nihId = req.params.nihId;
-            logger.info('Getting properties for ' + nihId);
+            logger.info('Getting Fred properties for property officer ' + nihId);
             try {
-                const props = await getFredPropertiesForUser(nihId);
+                const props = await getFredPropertiesByPropertyOfficer(nihId);
+                if (req.accepts('xml')) {
+                    res.send(js2xmlparser('properties', props, parserOptions));
+                } else {
+                    res.send(props);
+                }
+            } catch (error) {
+                return error;
+            }
+        });
+
+    fredRouter.route('/props/custodian/:nihId')
+        .get(async (req, res) => {
+            const nihId = req.params.nihId;
+            logger.info('Getting Fred properties for custodian ' + nihId);
+            try {
+                const props = await getFredPropertiesByCustodian(nihId);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
                 } else {
