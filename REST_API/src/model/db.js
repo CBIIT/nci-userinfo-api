@@ -83,14 +83,14 @@ const getFredPropertiesByPropertyOfficer = async (propertyOfficerNedId) => {
     const collection = connection.collection(config.db.fred_properties_collection);
     const results = await collection.find({ PropertyOfficeNedId: propertyOfficerNedId }, { _id: 0 }).toArray();
     return results;
-}
+};
 
 const getFredPropertiesByCustodian = async (custodianNedId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
     const results = await collection.find({ CustodianNedId: custodianNedId }, { _id: 0 }).toArray();
     return results;
-}
+};
 
 const getFredUserById = async (nihId) => {
     const connection = getConnection();
