@@ -1,4 +1,7 @@
-module.exports = function (config) {
+'use strict';
+const { config } = require('../../constants');
+
+module.exports = () => {
     return {
         user: config.nVision.user,
         password: config.nVision.password,

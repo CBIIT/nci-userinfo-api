@@ -1,4 +1,5 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('winston');
 const assert = require('assert');

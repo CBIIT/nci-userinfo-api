@@ -1,7 +1,8 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
+const logger = require('winston');
 const WSSecurity = require('wssecurity');
 const soap = require('soap');
-const logger = require('winston');
 const wsSecurity = new WSSecurity(config.fred.username, config.fred.password);
 const userWsdl = config.fred.user_wsdl;
 const propertyWsdl = config.fred.property_wsdl;

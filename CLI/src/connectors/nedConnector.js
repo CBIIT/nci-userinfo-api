@@ -1,4 +1,5 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
 const WSSecurity = require('wssecurity');
 const soap = require('soap');
 

@@ -1,4 +1,5 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
 const logger = require('winston');
 const nedConnector = require('../connectors/nedConnector');
 const mongoConnector = require('../connectors/mongoConnector');

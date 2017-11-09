@@ -1,6 +1,7 @@
-const config = require(process.env.NODE_CONFIG_FILE_API);
+'use strict';
+const { config } = require('../../constants');
 const oracledb = require('oracledb');
-const nVisionConfig = require('../config/nVisionConfig')(config);
+const nVisionConfig = require('../config/nVisionConfig')();
 
 const getConnection = () => {
     return oracledb.getConnection(nVisionConfig);
