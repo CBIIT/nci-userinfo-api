@@ -32,7 +32,10 @@ var app = express();
     app.use(requireHTTPS);
     app.use(bodyParser.json());
     app.use(compression());
-
+    if (process.env.NODE_ENV === 'development') {
+        app.use(headerLogger);
+    }
+    
     let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
     let nedApiRouter = require('./src/routes/nedApiRoutes')();
     let utilRouter = require('./src/routes/excelApiRoutes')();
@@ -63,6 +66,11 @@ var app = express();
     });
 
 })();
+
+function headerLogger(req, res, next) {
+    logger.info(req.headers);
+    next();
+}
 
 // Helper functions
 function requireHTTPS(req, res, next) {
