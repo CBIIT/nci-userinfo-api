@@ -68,7 +68,7 @@ var app = express();
 })();
 
 function headerLogger(req, res, next) {
-    logger.info('headers: ' + req.headers);
+    logger.info('headers: ' + JSON.stringify(req.headers));
     next();
 }
 
