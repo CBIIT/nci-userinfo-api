@@ -35,7 +35,7 @@ var app = express();
     if (process.env.NODE_ENV === 'development') {
         app.use(headerLogger);
     }
-    
+
     let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
     let nedApiRouter = require('./src/routes/nedApiRoutes')();
     let utilRouter = require('./src/routes/excelApiRoutes')();
@@ -68,7 +68,7 @@ var app = express();
 })();
 
 function headerLogger(req, res, next) {
-    logger.info(req.headers);
+    logger.info('headers: ' + req.headers);
     next();
 }
 
