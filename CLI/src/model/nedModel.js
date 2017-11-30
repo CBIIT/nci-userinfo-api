@@ -23,7 +23,7 @@ const updateNedChanges = async () => {
         logger.info('Found ' + numChanges + ' NED changes since ' + fromDate + ' ' + fromTime);
 
         if (numChanges > 0) {
-            const nedChanges = numChanges === 1 ? nedChangesResult.NED_CHANGES_RECORD.toArray() : nedChangesResult.NED_CHANGES_RECORD;
+            const nedChanges = numChanges === 1 ? [nedChangesResult.NED_CHANGES_RECORD] : nedChangesResult.NED_CHANGES_RECORD;
             await collection.insertMany(nedChanges, { ordered: false });
         }
 
