@@ -25,7 +25,7 @@ const router = () => {
         .get(function (req, res) {
 
             getUsers(null, req.params.ic)
-                .then(function (err, users) {
+                .then(function (users) {
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
                     } else {
