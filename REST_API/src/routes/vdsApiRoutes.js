@@ -9,7 +9,7 @@ const js2xmlparser = require('js2xmlparser2');
 const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
-
+const util = require('../util/base64Processing');
 
 var parserOptions = {
     wrapArray: {
@@ -99,62 +99,7 @@ const getUsers = async (userId, ic) => {
                     if (++counter % 10000 === 0) {
                         logger.info(counter + ' records found and counting...');
                     }
-                    let obj = entry.object;
-                    const raw = entry.raw;
-                    let base64Field = raw.objectGUID;
-                    if (base64Field) {
-                        obj.objectGUID = base64Field.toString('base64');
-                    }
-
-                    base64Field = raw['mS-DS-ConsistencyGuid'];
-                    if (base64Field) {
-                        obj['mS-DS-ConsistencyGuid'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msExchArchiveGUID'];
-                    if (base64Field) {
-                        obj['msExchArchiveGUID'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msRTCSIP-UserRoutingGroupId'];
-                    if (base64Field) {
-                        obj['msRTCSIP-UserRoutingGroupId'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msExchMailboxGuid'];
-                    if (base64Field) {
-                        obj['msExchMailboxGuid'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['objectSid'];
-                    if (base64Field) {
-                        obj['objectSid'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['userCertificate'];
-                    if (base64Field) {
-                        obj['userCertificate'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msExchSafeSendersHash'];
-                    if (base64Field) {
-                        obj['msExchSafeSendersHash'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msExchUMSpokenName'];
-                    if (base64Field) {
-                        obj['msExchUMSpokenName'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['userSMIMECertificate'];
-                    if (base64Field) {
-                        obj['userSMIMECertificate'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['msRTCSIP-UserRoutingGroupId'];
-                    if (base64Field) {
-                        obj['msRTCSIP-UserRoutingGroupId'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['objectGUID'];
-                    if (base64Field) {
-                        obj['objectGUID'] = base64Field.toString('base64');
-                    }
-                    base64Field = raw['thumbnailPhoto'];
-                    if (base64Field) {
-                        obj['thumbnailPhoto'] = base64Field.toString('base64');
-                    }
-
+                    let obj = util.convertBase64Fields(entry);
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
