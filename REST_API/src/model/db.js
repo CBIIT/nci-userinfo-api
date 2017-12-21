@@ -4,18 +4,23 @@ const logger = require('winston');
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 let connection = null;
+const fredPropertyProjection = config.fred.property_attributes.reduce(function (acc, cur) {
+    acc['_id'] = 0;
+    acc[cur] = 1;
+    return acc;
+}, {});
 
 const getProperties = async () => {
     const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
-    const results = await collection.find({}, { _id: 0 }).toArray();
+    const results = await collection.find({}, {_id: 0}).toArray();
     return results;
 };
 
 const getPropertiesForUser = async (nihId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
-    const results = await collection.find({ CURR_NED_ID: nihId }, { _id: 0 }).toArray();
+    const results = await collection.find({ CURR_NED_ID: nihId }, {_id: 0}).toArray();
     return results;
 };
 
@@ -74,21 +79,21 @@ const getFredUsers = async () => {
 const getFredProperties = async () => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
-    const results = await collection.find({}, { _id: 0 }).toArray();
+    const results = await collection.find({}, fredPropertyProjection).toArray();
     return results;
 };
 
 const getFredPropertiesByPropertyOfficer = async (propertyOfficerNedId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
-    const results = await collection.find({ PropertyOfficeNedId: propertyOfficerNedId }, { _id: 0 }).toArray();
+    const results = await collection.find({ PropertyOfficerNedId: propertyOfficerNedId }, fredPropertyProjection).toArray();
     return results;
 };
 
 const getFredPropertiesByCustodian = async (custodianNedId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
-    const results = await collection.find({ CustodianNedId: custodianNedId }, { _id: 0 }).toArray();
+    const results = await collection.find({ CustodianNedId: custodianNedId }, fredPropertyProjection).toArray();
     return results;
 };
 
