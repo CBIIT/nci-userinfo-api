@@ -462,25 +462,26 @@ var router = function () {
                             u_closing_on_quarter: resultMap[key].u_closing_on_quarter,
                             u_closing_on_fiscal_year: resultMap[key].u_closing_on_fiscal_year
                         });
-                    } else {
-                        sheet.addRow({
-                            u_ic: 'NCI',
-                            u_data_call: 'ATC',
-                            u_average_it_electricity_usage: 0,
-                            u_automated_monitoring: 'no',
-                            u_server_utilization: 0,
-                            u_total_ftes: 0.1,
-                            u_rack_count: 0,
-                            u_total_mainframes: 0,
-                            u_total_windows_servers: 0,
-                            u_total_hpc_cluster_nodes: 0,
-                            u_total_other_servers: 1,
-                            u_total_virtual_hosts: 0,
-                            u_total_virtual_os: 0,
-                            u_total_storage: 0,
-                            u_used_storage: 0
-                        });
-                    }
+                    } 
+                    // else {
+                    //     sheet.addRow({
+                    //         u_ic: 'NCI',
+                    //         u_data_call: 'ATC',
+                    //         u_average_it_electricity_usage: 0,
+                    //         u_automated_monitoring: 'no',
+                    //         u_server_utilization: 0,
+                    //         u_total_ftes: 0.1,
+                    //         u_rack_count: 0,
+                    //         u_total_mainframes: 0,
+                    //         u_total_windows_servers: 0,
+                    //         u_total_hpc_cluster_nodes: 0,
+                    //         u_total_other_servers: 1,
+                    //         u_total_virtual_hosts: 0,
+                    //         u_total_virtual_os: 0,
+                    //         u_total_storage: 0,
+                    //         u_used_storage: 0
+                    //     });
+                    // }
 
                 });
 
@@ -504,7 +505,7 @@ function getDataCenterName(dataCenterName, category) {
     if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
         return 'atc-dceg';
     }
-    if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
+    if (dataCenterName === '9609mc_te21' && category === 'CCR') {
         return '9609mc_te21-ccr';
     }
     if (dataCenterName === '9609mc_te21' && category === 'DEA') {
