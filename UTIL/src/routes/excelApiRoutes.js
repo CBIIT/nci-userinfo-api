@@ -19,7 +19,8 @@ const CLOSING_STAGE_MAP =
         'closed': 'Closed'
     };
 
-const keyOrder = ['riverside_5', 'bldg_41_a224', 'bldg_37_b1042a', 'bldg_31', 'bldg_10', 'atc_warehouse', 'atc', '9609mc_tw202', '9609mc_te21'];
+// const keyOrder = ['riverside_5', 'bldg_41_a224', 'bldg_37_b1042a', 'bldg_31', 'bldg_10', 'atc_warehouse', 'atc', '9609mc_tw202', '9609mc_te21'];
+const keyOrder = ['atc_warehouse', '9609mc_tw202', '9609mc_te21'];
 
 var router = function () {
 
@@ -505,7 +506,7 @@ function getDataCenterName(dataCenterName, category) {
     if (dataCenterName === 'atc_warehouse' && category === 'DCEG-ATC Warehouse') {
         return 'atc-dceg';
     }
-    if (dataCenterName === '9609mc_te21' && category === 'CCR') {
+    if (dataCenterName === '9609mc_te21' && category === 'CCR-CGB') {
         return '9609mc_te21-ccr';
     }
     if (dataCenterName === '9609mc_te21' && category === 'DEA') {
