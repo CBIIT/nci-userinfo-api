@@ -38,11 +38,8 @@ var app = express();
 
     let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
     let nedApiRouter = require('./src/routes/nedApiRoutes')();
-    let utilRouter = require('./src/routes/excelApiRoutes')();
     let propRouter = require('./src/routes/nvRoutes')();
     let fredRouter = require('./src/routes/fredRoutes')();
-
-    app.use('/api/util', utilRouter);
 
     // Enforce authentication
     app.use(basicAuth({
