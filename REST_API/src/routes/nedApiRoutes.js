@@ -30,7 +30,15 @@ const router = () => {
             soap.createClient(wsdl, function (err, soapClient) {
                 soapClient.setSecurity(wsSecurity);
                 soapClient.ByName(args, function (err, result) {
-                    res.send(result);
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('result', result, parserOptions));
+                        } else {
+                            res.send(result);
+                        }
+                    }
                 });
             });
         });
@@ -58,7 +66,16 @@ const router = () => {
             soap.createClient(wsdl, function (err, soapClient) {
                 soapClient.setSecurity(wsSecurity);
                 soapClient.ByNIHId(args, function (err, result) {
-                    res.send(result);
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('result', result, parserOptions));
+                        } else {
+                            res.send(result);
+                        }
+                    }
+
                 });
             });
         });
@@ -74,7 +91,15 @@ const router = () => {
             soap.createClient(wsdl, function (err, soapClient) {
                 soapClient.setSecurity(wsSecurity);
                 soapClient.ByADaccount(args, function (err, result) {
-                    res.send(result);
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('result', result, parserOptions));
+                        } else {
+                            res.send(result);
+                        }
+                    }
                 });
             });
         });

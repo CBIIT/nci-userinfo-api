@@ -69,7 +69,6 @@ const getUsers = async (userId, ic) => {
     return new Promise(async function (resolve, reject) {
 
         const nciSubFilter = '(NIHORGACRONYM=' + ic + ')';
-        //var nciSubFilter = '';
         const filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
         //const filter = userId ? 'UNIQUEIDENTIFIER=' + userId : 'UNIQUEIDENTIFIER=*';
 
