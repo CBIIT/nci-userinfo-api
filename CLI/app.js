@@ -5,6 +5,7 @@ const nvModel = require('./src/model/nvModel');
 const vdsModel = require('./src/model/vdsModel');
 const nedModel = require('./src/model/nedModel');
 const fredModel = require('./src/model/fredModel');
+const consolidatedModel = require('./src/model/consolidatedModel');
 
 
 program
@@ -13,19 +14,19 @@ program
 program
     .command('reloadVDSUsers')
     .description('Drops and reloads VDS users collection')
-    .action(() => { vdsModel.reloadUsers() });
+    .action(() => { vdsModel.reloadUsers(); });
 program
     .command('updateVDSUsers')
     .description('Updates VDS users without drop')
-    .action(() => { vdsModel.updateUsers() });
+    .action(() => { vdsModel.updateUsers(); });
 program
     .command('reloadNVProperties')
     .description('Drops and reloads nVision properties collection')
-    .action(() => { nvModel.reloadProperties() });
+    .action(() => { nvModel.reloadProperties(); });
 program
     .command('updateNedChanges')
     .description('Fetches the latest NED changes')
-    .action(() => { nedModel.updateNedChanges() });
+    .action(() => { nedModel.updateNedChanges(); });
 program
     .command('reloadFredUsers')
     .description('Drops and reloads Fred users')
@@ -34,6 +35,13 @@ program
     .command('reloadFredProperties')
     .description('Updates Fred properties')
     .action(() => { fredModel.reloadProperties(); });
+program
+    .command('reloadUserView')
+    .description('Consolidates user information from all sources')
+    .action(() => { consolidatedModel.reloadUserView(); });
+program
+    .command('compareFredAndVDS')
+    .action(() => { consolidatedModel.compareFredAndVDS(); });
 
 program.parse(process.argv);
 
