@@ -7,6 +7,16 @@ const compression = require('compression');
 const logger = require('./src/config/log');
 const { initDbConnection } = require('./src/model/db');
 const { acl } = require('./security');
+const graphqlHTTP = require('express-graphql');
+const { buildSchema } = require('graphql');
+
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+const root = { hello: () => 'Hello world!' };
 
 process.on('unhandledRejection', (reason, p) => {
     logger.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
@@ -25,6 +35,13 @@ var app = express();
         logger.error('Fatal Error: ' + error.message);
         process.exit(1);
     }
+
+    app.use('/graphql', graphqlHTTP({
+        schema: schema,
+        rootValue: root,
+        graphiql: true,
+    }));
+    app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
 
     const authObject = config.users.reduce(function (acc, cur) {
         acc[cur.user] = cur.password;
