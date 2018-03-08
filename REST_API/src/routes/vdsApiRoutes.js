@@ -74,7 +74,7 @@ const getUsers = async (userId, ic) => {
 
         var userSearchOptions = {
             scope: 'sub',
-            attributes: config.vds.user_attributes,
+            // attributes: config.vds.user_attributes,
             filter: filter,
             paged: true
         };
@@ -126,7 +126,6 @@ const getUsers = async (userId, ic) => {
 
     });
 };
-
 
 const getLdapClient = async () => {
 
