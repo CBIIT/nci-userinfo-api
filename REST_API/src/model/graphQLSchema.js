@@ -97,10 +97,12 @@ const root = {
 
     user: async (id) => {
         // console.log(`id: ${id.id}`);
-        const user = await getUserGraphQLMongo(id.id);
+        // const user = await getUserGraphQLMongo(id.id);
+        const users = await getUsersGraphQL(id.id, '*');
+
         // console.log(user[0]);
         // return js2xmlparser('user', users, parserOptions);
-        return user;
+        return users.length > 0 ? users[0] : [];
         // return await getUsersGraphQL(id, 'NCI', null);
     },
 

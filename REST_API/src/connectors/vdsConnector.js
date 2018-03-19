@@ -136,7 +136,7 @@ const mapFields = (user) => {
     user.point_of_contact_id = user.NIHPOC;
     user.division = getDivision(user);
     user.site = user.NIHSITE;
-    user.building = getBuilding(user);
+    user.building = user.BUILDINGNAME;
     user.room = user.ROOMNUMBER;
     user.member_of = user.memberOf;
     return user;
@@ -205,20 +205,9 @@ const getEmail = (obj) => {
     return result;
 };
 
-const getBuilding = (obj) => {
-
-    return obj.BUILDINGNAME ? obj.BUILDINGNAME : 'N/A';
-
-    // if (obj.BUILDINGNAME) {
-    //     return 'BG ' + obj.BUILDINGNAME;
-    // } else {
-    //     return 'N/A';
-    // }
-};
-
 const getDivision = (obj) => {
 
-    let result = 'N/A';
+    let result = '';
 
     if (obj.NIHORGPATH) {
         const orgPathArr = obj.NIHORGPATH.split(' ') || [];
