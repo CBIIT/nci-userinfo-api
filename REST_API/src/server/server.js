@@ -17,7 +17,7 @@ function setup( ssl ) {
 module.exports = {
     create: function ( app, cb ) {
         var options = setup( config.ssl );
-        http.createServer( app ).listen( config.web.http_port, cb );
+        http.createServer( app ).listen( config.web.http_port, cb ).setTimeout(10 * 60 * 1000); // 10 minutes for long running VDS calls
         logger.info( 'Accepting http requests on port ' + config.web.http_port );
         if ( options ) {
             https.createServer( options, app ).listen( config.web.ssl_port, cb );
