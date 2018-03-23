@@ -23,7 +23,6 @@ const router = () => {
 
     apiRouter.route('/users/ic/:ic')
         .get(function (req, res) {
-
             getUsers(null, req.params.ic)
                 .then(function (users) {
                     if (req.accepts('xml')) {
@@ -92,6 +91,7 @@ const getUsers = async (userId, ic) => {
             logger.info('starting search');
             ldapClient.search(config.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
+                    logger.error(err);
                     reject(Error(err.message));
                 }
                 ldapRes.on('searchEntry', function (entry) {
@@ -103,7 +103,7 @@ const getUsers = async (userId, ic) => {
                 });
                 ldapRes.on('searchReference', function () { });
                 ldapRes.on('page', function () {
-                    logger.info('page end');
+                    logger.info(`page end | ${counter} users fetched`);
                 });
                 ldapRes.on('error', function (err) {
                     ldapClient.destroy();
@@ -111,6 +111,7 @@ const getUsers = async (userId, ic) => {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve({});
                     } else {
+                        logger.error('err');
                         reject(Error(err.message));
                     }
                 });

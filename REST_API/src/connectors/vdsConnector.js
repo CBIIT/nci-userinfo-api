@@ -1,8 +1,6 @@
 'use strict';
 const { config } = require('../../constants');
 const logger = require('winston');
-// const express = require('express');
-// const apiRouter = express.Router();
 const ldap = require('ldapjs');
 const fs = require('fs');
 const tlsOptions = {
@@ -10,13 +8,6 @@ const tlsOptions = {
 };
 const util = require('../util/base64Processing');
 const { getUserById, getPropertiesForUser } = require('../model/db');
-
-// const js2xmlparser = require('js2xmlparser2');
-// var parserOptions = {
-//     wrapArray: {
-//         enabled: true
-//     }
-// };
 
 const getUserGraphQLMongo = async (userId) => {
 
@@ -90,7 +81,7 @@ const getUsersGraphQL = async (userId, ic) => {
                 });
                 ldapRes.on('searchReference', () => { });
                 ldapRes.on('page', () => {
-                    logger.info('page end');
+                    logger.info(`page end | ${counter} users fetched so far.`);
                 });
                 ldapRes.on('error', (err) => {
                     ldapClient.destroy();
@@ -98,6 +89,7 @@ const getUsersGraphQL = async (userId, ic) => {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve({});
                     } else {
+                        logger.error(err);
                         reject(Error(err.message));
                     }
                 });
