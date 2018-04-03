@@ -128,7 +128,7 @@ const mapFields = (user) => {
     user.point_of_contact_id = user.NIHPOC;
     user.division = getDivision(user);
     user.site = user.NIHSITE;
-    user.building = user.BUILDINGNAME;
+    user.building = getBuilding(user);
     user.room = user.ROOMNUMBER;
     user.member_of = user.memberOf;
     return user;
@@ -218,6 +218,22 @@ const getDivision = (obj) => {
 
     return result;
 
+};
+
+const getBuilding = (obj) => {
+    let result = null;
+
+    if (obj.BUILDINGNAME) {
+        result = obj.BUILDINGNAME;
+    } else {
+        if (obj.NIHPHYSICALADDRESS.startsWith('9606 MEDICAL CENTER DR')) {
+            result = '9609';
+        } else if (obj.NIHPHYSICALADDRESS.startsWith('9605 MEDICAL CENTER DR')) {
+            result = '9605';
+        }
+    }
+
+    return result;
 };
 
 module.exports = { getUsersGraphQL, getUserGraphQLMongo };
