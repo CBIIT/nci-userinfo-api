@@ -256,8 +256,6 @@ const inactive = (user) => {
 
     if (user.NIHDIRENTRYEXPIRATIONDATE) {
         const endDate = new Date(user.NIHDIRENTRYEXPIRATIONDATE);
-
-
         if (endDate < today) {
             result = true;
         }
