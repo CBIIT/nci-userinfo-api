@@ -112,7 +112,7 @@ const mapFields = (user) => {
     user.ned_id = user.UNIQUEIDENTIFIER;
     // when users are transferring they temporarily have more than one distinguishedName. Hence, we will handle distinguishedName as an array in all cases.
     user.distinguished_name = typeof user.distinguishedName === 'string' ? [user.distinguishedName] : user.distinguishedName;
-    user.inactive = (user.distinguished_name && user.distinguished_name.join().includes('_InActive')) || false;
+    user.inactive = inactive(user);
     user.first_name = user.GIVENNAME;
     user.middle_name = user.MIDDLENAME;
     user.last_name = user.NIHMIXCASESN;
@@ -131,6 +131,8 @@ const mapFields = (user) => {
     user.building = getBuilding(user);
     user.room = user.ROOMNUMBER;
     user.member_of = user.memberOf;
+    user.effective_start_date = user.NIHDIRENTRYEFFECTIVEDATE;
+    user.effective_end_date = user.NIHDIRENTRYEXPIRATIONDATE;
     return user;
 };
 
@@ -230,6 +232,34 @@ const getBuilding = (obj) => {
             result = '9609';
         } else if (obj.NIHPHYSICALADDRESS && obj.NIHPHYSICALADDRESS.startsWith('9605 MEDICAL CENTER DR')) {
             result = '9605';
+        }
+    }
+
+    return result;
+};
+
+
+const inactive = (user) => {
+    let result = false;
+
+    if (user.distinguished_name && user.distinguished_name.join().includes('_InActive')) {
+        result = true;
+    }
+
+    const today = new Date();
+    if (user.NIHDIRENTRYEFFECTIVEDATE) {
+        const startDate = new Date(user.NIHDIRENTRYEFFECTIVEDATE);
+        if (startDate > today) {
+            result = true;
+        }
+    }
+
+    if (user.NIHDIRENTRYEXPIRATIONDATE) {
+        const endDate = new Date(user.NIHDIRENTRYEXPIRATIONDATE);
+
+
+        if (endDate < today) {
+            result = true;
         }
     }
 

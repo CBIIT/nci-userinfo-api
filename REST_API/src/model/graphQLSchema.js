@@ -26,6 +26,8 @@ const schema = buildSchema(`
         point_of_contact: User,
         properties: [Property],
         member_of: [String],
+        effective_start_date: String,
+        effective_end_date: String,
     }
 
     type BasicUser {
@@ -51,6 +53,8 @@ const schema = buildSchema(`
         point_of_contact_id: String,
         properties: [Property],
         member_of: [String],
+        effective_start_date: String,
+        effective_end_date: String,
     }
 
     type Property {
