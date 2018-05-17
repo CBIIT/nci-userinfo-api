@@ -228,10 +228,12 @@ const getBuilding = (obj) => {
     if (obj.BUILDINGNAME) {
         result = obj.BUILDINGNAME;
     } else {
-        if (obj.NIHPHYSICALADDRESS && obj.NIHPHYSICALADDRESS.startsWith('9606 MEDICAL CENTER DR')) {
+        if (obj.NIHPHYSICALADDRESS && obj.NIHPHYSICALADDRESS.startsWith('9609 MEDICAL CENTER DR')) {
             result = '9609';
         } else if (obj.NIHPHYSICALADDRESS && obj.NIHPHYSICALADDRESS.startsWith('9605 MEDICAL CENTER DR')) {
             result = '9605';
+        } else if (obj.NIHPHYSICALADDRESS && obj.NIHPHYSICALADDRESS.startsWith('8560 PROGRESS DR')) {
+            result = 'ATRF';
         }
     }
 
