@@ -244,7 +244,11 @@ const getBuilding = (obj) => {
 const inactive = (user) => {
     let result = false;
 
-    if (user.distinguished_name && user.distinguished_name.join().includes('_InActive')) {
+    // check inactive OU or disabled account(514)
+    if (!user.distinguished_name ||
+        !user.userAccountControl ||
+        (user.distinguished_name && user.distinguished_name.join().includes('_InActive')) ||
+        (user.userAccountControl && user.userAccountControl === 514)) {
         result = true;
     }
 
