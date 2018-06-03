@@ -2,6 +2,8 @@
 const { getUsersGraphQL } = require('../connectors/vdsConnector');
 const { buildSchema } = require('graphql');
 
+const { getPropertiesForUser } = require('./db');
+
 const schema = buildSchema(`
     type User {
         ned_id: String,
@@ -82,8 +84,43 @@ const root = {
 
     user: async (id) => {
         const users = await getUsersGraphQL(id.id, '*');
+        const user = users.length > 0 ? users[0] : null;
 
-        return users.length > 0 ? users[0] : [];
+        if (user) {
+            // get the associated user accounts - manager, POC, etc.
+            console.log('getting user associations');
+            if (user.administrative_officer_id) {
+                console.log('admin officer id: ' + user.administrative_officer_id);
+                const result = await getUsersGraphQL(user.administrative_officer_id, '*');
+                if (result.length > 0) {
+                    user.administrative_officer = result[0];
+                }
+            }
+
+            if (user.point_of_contact_id) {
+                const result = await getUsersGraphQL(user.point_of_contact_id, '*');
+                if (result.length > 0) {
+                    user.point_of_contact = result[0];
+                }
+            }
+          
+            if (user.manager_id) {
+                const result = await getUsersGraphQL(user.manager_id, '*');
+                if (result.length > 0) {
+                    user.manager = result[0];
+                }
+            }
+
+            if (user.cotr_id) {
+                const result = await getUsersGraphQL(user.cotr_id, '*');
+                if (result.length > 0) {
+                    user.cotr = result[0];
+                }
+            }
+          
+            user.properties = await getPropertiesForUser(user.ned_id, '*');
+        }
+        return user;
     },
 
     hello: () => 'Hello There!'

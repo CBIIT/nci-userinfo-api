@@ -7,39 +7,6 @@ const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
 const util = require('../util/base64Processing');
-const { getUserById, getPropertiesForUser } = require('../model/db');
-
-const getUserGraphQLMongo = async (userId) => {
-
-    return new Promise(async (resolve, reject) => {
-        try {
-            let user = await getUserById(userId);
-            user = mapFields(user);
-            user.administrative_officer = await getUserById(user.administrative_officer_id);
-            if (user.administrative_officer) {
-                user.administrative_officer = mapFields(user.administrative_officer);
-            }
-            user.point_of_contact = await getUserById(user.point_of_contact_id);
-            if (user.point_of_contact) {
-                user.point_of_contact = mapFields(user.point_of_contact);
-            }
-            user.manager = await getUserById(user.manager_id);
-            if (user.manager) {
-                user.manager = mapFields(user.manager);
-            }
-            user.cotr = await getUserById(user.cotr_id);
-            if (user.cotr) {
-                user.cotr = mapFields(user.cotr);
-            }
-            user.properties = await getPropertiesForUser(userId);
-            resolve(user);
-        } catch (error) {
-            reject(error);
-        }
-
-    });
-
-};
 
 const getUsersGraphQL = async (userId, ic) => {
 
@@ -270,4 +237,4 @@ const inactive = (user) => {
     return result;
 };
 
-module.exports = { getUsersGraphQL, getUserGraphQLMongo };
+module.exports = { getUsersGraphQL };

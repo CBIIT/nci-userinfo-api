@@ -28,13 +28,6 @@ var app = express();
         process.exit(1);
     }
 
-    app.use('/graphql', graphqlHTTP({
-        schema: schema,
-        rootValue: root,
-        graphiql: true,
-    }));
-    // app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
-
     const authObject = config.users.reduce(function (acc, cur) {
         acc[cur.user] = cur.password;
         return acc;
@@ -42,7 +35,6 @@ var app = express();
 
     // Don't add routes before this line! All routes pass through the require https filter.
     app.use(requireHTTPS);
-    app.use(bodyParser.json());
     app.use(compression());
 
     let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
@@ -57,7 +49,13 @@ var app = express();
 
     // Enforce authorization
     app.use(authorize);
+    app.use('/graphql', graphqlHTTP({
+        schema: schema,
+        rootValue: root,
+        graphiql: false, 
+    }));
 
+    app.use(bodyParser.json());
     // Routes after this line require basic authentication and access authorization
     app.use('/api/vds', vdsApiRouter);
     app.use('/api/ned', nedApiRouter);

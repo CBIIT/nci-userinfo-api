@@ -69,13 +69,6 @@ const getOrphanedProperties = async () => {
     return orphaned.sort();
 };
 
-const getUserById = async (nedId) => {
-    const connection = getConnection();
-    const collection = connection.collection(config.db.users_collection);
-    const results = await collection.findOne({ UNIQUEIDENTIFIER: nedId });
-    return results;
-};
-
 const getFredUsers = async () => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_users_collection);
@@ -129,4 +122,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getUserById, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById };
