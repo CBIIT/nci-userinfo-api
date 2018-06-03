@@ -77,7 +77,6 @@ const schema = buildSchema(`
 const root = {
 
     users: async (ic) => {
-        console.log(`requesting ${ic.ic} users`);
         const users = await getUsersGraphQL(null, ic.ic);
         return users;
     },
@@ -88,9 +87,7 @@ const root = {
 
         if (user) {
             // get the associated user accounts - manager, POC, etc.
-            console.log('getting user associations');
             if (user.administrative_officer_id) {
-                console.log('admin officer id: ' + user.administrative_officer_id);
                 const result = await getUsersGraphQL(user.administrative_officer_id, '*');
                 if (result.length > 0) {
                     user.administrative_officer = result[0];
