@@ -10,7 +10,7 @@
     "commander": "^2.11.0",
     "ldapjs": "^1.0.1",
     "mongodb": "^2.2.33",
-    "oracledb": "^1.13.1",
+    "oracledb": "github:oracle/node-oracledb#v2.2.0",
     "soap": "^0.23.0",
     "winston": "^2.4.0",
     "wssecurity": "^0.2.4"
