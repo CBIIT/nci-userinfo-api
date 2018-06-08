@@ -28,6 +28,8 @@ var app = express();
         process.exit(1);
     }
 
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
     const authObject = config.users.reduce(function (acc, cur) {
         acc[cur.user] = cur.password;
         return acc;
