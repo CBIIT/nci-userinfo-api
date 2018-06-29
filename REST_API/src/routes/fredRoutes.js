@@ -19,7 +19,11 @@ const router = () => {
         .get(async (req, res) => {
             logger.info('Getting all Fred properties');
             try {
-                const props = await getFredProperties();
+                const inputPageSize = parseInt(req.query.pageSize);
+                const pageSize = inputPageSize > 0 ? inputPageSize : 1000;
+                const inputPageNum = parseInt(req.query.pageNum);
+                const pageNum = inputPageNum > 0 ? inputPageNum : 1;
+                const props = await getFredProperties(pageSize, pageNum);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
                 } else {

@@ -17,7 +17,11 @@ const router = () => {
         .get(async (req, res) => {
             logger.info('Getting all properties');
             try {
-                const props = await getProperties();
+                const inputPageSize = parseInt(req.query.pageSize);
+                const pageSize = inputPageSize > 0 ? inputPageSize : 1000;
+                const inputPageNum = parseInt(req.query.pageNum);
+                const pageNum = inputPageNum > 0 ? inputPageNum : 1;
+                const props = await getProperties(pageSize, pageNum);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
                 } else {

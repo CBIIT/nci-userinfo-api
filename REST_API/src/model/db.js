@@ -10,10 +10,10 @@ const fredPropertyProjection = config.fred.property_attributes.reduce(function (
     return acc;
 }, {});
 
-const getProperties = async () => {
+const getProperties = async (pageSize, pageNum) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
-    const results = await collection.find({}, {_id: 0}).toArray();
+    const results = await collection.find({}, {_id: 0}).skip(pageSize * (pageNum -1)).limit(pageSize).toArray();
     return results;
 };
 
@@ -76,10 +76,10 @@ const getFredUsers = async () => {
     return results;
 };
 
-const getFredProperties = async () => {
+const getFredProperties = async (pageSize, pageNum) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
-    const results = await collection.find({}, fredPropertyProjection).toArray();
+    const results = await collection.find({}, fredPropertyProjection).skip(pageSize * (pageNum -1)).limit(pageSize).toArray();
     return results;
 };
 
