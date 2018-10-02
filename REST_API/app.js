@@ -43,6 +43,8 @@ var app = express();
     let nedApiRouter = require('./src/routes/nedApiRoutes')();
     let propRouter = require('./src/routes/nvRoutes')();
     let fredRouter = require('./src/routes/fredRoutes')();
+    let orgRouter = require('./src/routes/orgRoutes')();
+    app.use('/api/org', orgRouter)
 
     // Enforce authentication
     app.use(basicAuth({

@@ -104,6 +104,13 @@ const getFredUserById = async (nihId) => {
     return results;
 };
 
+const getOrgByFilter = async (filter) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.orgs_collection);
+    const results = await collection.find(filter, { _id: 0 }).toArray();
+    return results;
+};
+
 const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -122,4 +129,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter };
