@@ -6,6 +6,7 @@ const vdsModel = require('./src/model/vdsModel');
 const nedModel = require('./src/model/nedModel');
 const fredModel = require('./src/model/fredModel');
 const consolidatedModel = require('./src/model/consolidatedModel');
+const {parseOrgs} = require('./src/util/parse-orgs.js');
 
 
 program
@@ -42,6 +43,9 @@ program
 program
     .command('compareFredAndVDS')
     .action(() => { consolidatedModel.compareFredAndVDS(); });
+program
+    .command('loadOrgs')
+    .action(() => { parseOrgs(); });
 
 program.parse(process.argv);
 
