@@ -35,6 +35,20 @@ const router = () => {
             }
         });
 
+    apiRouter.route('/name/:name')
+        .get(async function (req, res) {
+            try {
+                const org = await getOrgByFilter({name: new RegExp(req.params.name, 'i')});
+                if (org) {
+                    res.json(org);
+                } else {
+                    res.status(400).send('Organization not found');
+                }
+            } catch (error) {
+                res.status(500).send(error);
+            }
+        });
+
     apiRouter.route('/subbranch/sac/:sac')
         .get(async function (req, res) {
             try {
@@ -53,6 +67,30 @@ const router = () => {
         .get(async function (req, res) {
             try {
                 const orgs = await getOrgByFilter({shortName: req.params.shortName.toUpperCase()});
+                if (orgs) {
+                    const results = [];
+                    if (orgs.length > 0) {
+                        for ( const org of orgs) {
+                            const sac = org['sac'];
+                            const subOrgs = await getOrgByFilter({parentSac: sac});
+                            if (subOrgs.length > 0) {
+                                results.push(subOrgs);
+                            }
+                        }
+                    }
+                    res.json(results);
+                } else {
+                    res.status(400).send('Organization not found');
+                }
+            } catch (error) {
+                res.status(500).send(error);
+            }
+        });
+
+    apiRouter.route('/subbranch/name/:name')
+        .get(async function (req, res) {
+            try {
+                const orgs = await getOrgByFilter({name: new RegExp(req.params.name, 'i')});
                 if (orgs) {
                     const results = [];
                     if (orgs.length > 0) {
