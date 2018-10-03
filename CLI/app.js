@@ -45,6 +45,7 @@ program
     .action(() => { consolidatedModel.compareFredAndVDS(); });
 program
     .command('loadOrgs')
+    .description('Load organization information from users collection')
     .action(() => { parseOrgs(); });
 
 program.parse(process.argv);
