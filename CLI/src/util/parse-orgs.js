@@ -93,7 +93,6 @@ const parseOrgs = async function() {
             sacs[org.sac] = org;
         }
 
-        logger.info('Loading users from MongoDB');
         usersCollection.find().toArray( async (err, users) => {
             var totalUsers = 0;
             var totalSacs = 0;
@@ -102,7 +101,6 @@ const parseOrgs = async function() {
                 process.exit();
             }
 
-            // logger.info(users);
             for (const user of users) {
                 totalUsers++;
                 const sac = user.SAC || user.NIHSAC;
@@ -113,12 +111,12 @@ const parseOrgs = async function() {
                 const name = user.NIHOUNAME;
                 if (sacs[sac]) {
                     if (path !== sacs[sac].path) {
-                        logger.error('Data inconsistency: Different org paths! Ignoring new path!');
-                        logger.error(`New: ${path}   old: ${sacs[sac].path}`);
+                        logger.warn('Data inconsistency: Different org paths! Ignoring new path!');
+                        logger.warn(`New: ${path}   old: ${sacs[sac].path}`);
                         continue;
                     } else if (name !== sacs[sac].name) {
-                        logger.error('Data inconsistency: Different Names, updating to new name!');
-                        logger.error(`new: "${name}"   old: "${sacs[sac].name}"`);
+                        logger.warn('Data inconsistency: Different Names, updating to new name!');
+                        logger.warn(`new: "${name}"   old: "${sacs[sac].name}"`);
                         sacs[sac].name = name;
                     }
                 } else {
@@ -165,11 +163,12 @@ const parseOrgs = async function() {
                 }
             }
             if (inserts.length > 0) {
-                await insertDocs(orgsCollection, inserts);
+                const inserted = await insertDocs(orgsCollection, inserts);
+                logger.info(`${inserted} organizations inserted!`);
             }
 
             for (const key in missingPaths) {
-                logger.info(`Missing path: ${key} of ${missingPaths[key]}`);
+                logger.warn(`Missing path: ${key} of ${missingPaths[key]}`);
             }
 
             logger.info(`Total users: ${totalUsers}, total Organizations: ${totalSacs}`);
