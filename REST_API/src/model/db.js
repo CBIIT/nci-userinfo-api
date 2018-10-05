@@ -111,6 +111,16 @@ const getOrgByFilter = async (filter) => {
     return results;
 };
 
+const getOrgDescendantsBySac = async (sac) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.orgs_collection);
+    const branches = await collection.find({parentSac: sac}, { _id: 0 }).toArray();
+    for (const branch of branches) {
+        branch.subbranches = await getOrgDescendantsBySac(branch.sac);
+    }
+    return branches;
+};
+
 const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -129,4 +139,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter, getOrgDescendantsBySac };
