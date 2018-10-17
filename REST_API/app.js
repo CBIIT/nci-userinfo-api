@@ -38,6 +38,11 @@ var app = express();
     // Don't add routes before this line! All routes pass through the require https filter.
     app.use(requireHTTPS);
     app.use(compression());
+    app.use(function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        next();
+    });
 
     let vdsApiRouter = require('./src/routes/vdsApiRoutes')();
     let nedApiRouter = require('./src/routes/nedApiRoutes')();
