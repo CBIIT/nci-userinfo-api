@@ -49,6 +49,21 @@ const router = () => {
             }
         });
 
+
+    apiRouter.route('/org-path/:path')
+        .get(async function (req, res) {
+            try {
+                const org = await getOrgByFilter({path: req.params.path.toUpperCase()});
+                if (org) {
+                    res.json(org);
+                } else {
+                    res.status(400).send('Organization not found');
+                }
+            } catch (error) {
+                res.status(500).send(error);
+            }
+        });
+
     apiRouter.route('/subbranches/sac/:sac')
         .get(async function (req, res) {
             try {
