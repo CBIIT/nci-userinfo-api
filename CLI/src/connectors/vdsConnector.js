@@ -40,7 +40,7 @@ const getUsers = (userId, ic) => {
                     logger.error('error: ' + err.code);
                 }
                 ldapRes.on('searchEntry', (entry) => {
-                    if (++counter % 10000 === 0) {
+                    if (++counter % 1000 === 0) {
                         logger.info(counter + ' records found and counting...');
                     }
                     let obj = util.convertBase64Fields(entry);
