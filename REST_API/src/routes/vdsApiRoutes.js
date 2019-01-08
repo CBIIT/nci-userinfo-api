@@ -10,6 +10,7 @@ const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
 const util = require('../util/base64Processing');
+const {getUserByIc} = require('../model/db.js');
 
 var parserOptions = {
     wrapArray: {
@@ -22,6 +23,24 @@ const router = () => {
     var isNum = new RegExp('^[0-9]+$');
 
     apiRouter.route('/users/ic/:ic')
+        .get(async function (req, res) {
+            try {
+                const users = await getUserByIc(req.params.ic);
+                if (users) {
+                    if (req.accepts('xml')) {
+                        res.send(js2xmlparser('users', users, parserOptions));
+                    } else {
+                        res.json(users);
+                    }
+                } else {
+                    res.status(400).send('Users not found');
+                }
+            } catch (error) {
+                res.status(500).send(error);
+            }
+        });
+
+    apiRouter.route('/users/ic/:ic/realtime')
         .get(function (req, res) {
             getUsers(null, req.params.ic)
                 .then(function (users) {
