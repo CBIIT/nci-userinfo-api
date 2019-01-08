@@ -121,7 +121,7 @@ const getOrgDescendantsBySac = async (sac) => {
     return branches;
 };
 
-const getUserByIc = async (ic) => {
+const getUsersByIc = async (ic) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.users_collection);
     const users = await collection.find({'NIHORGACRONYM': ic},  config.vds.user_attributes.reduce((acc, curr) => {
@@ -150,4 +150,4 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter, getOrgDescendantsBySac, getUserByIc };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter, getOrgDescendantsBySac, getUsersByIc };

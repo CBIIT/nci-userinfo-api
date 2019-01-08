@@ -10,7 +10,7 @@ const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
 const util = require('../util/base64Processing');
-const {getUserByIc} = require('../model/db.js');
+const {getUsersByIc} = require('../model/db.js');
 
 var parserOptions = {
     wrapArray: {
@@ -25,7 +25,7 @@ const router = () => {
     apiRouter.route('/users/ic/:ic')
         .get(async function (req, res) {
             try {
-                const users = await getUserByIc(req.params.ic);
+                const users = await getUsersByIc(req.params.ic);
                 if (users) {
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
