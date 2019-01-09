@@ -6,14 +6,14 @@ const mongoConnector = require('../connectors/mongoConnector');
 
 const reloadUsers = async () => {
     const connection = await mongoConnector.getConnection();
-    console.log('connecting to ' + config.db.users_collection);
+    logger.info('connecting to ' + config.db.users_collection);
     const collection = connection.collection(config.db.users_collection);
 
     try {
         await collection.remove({});
-        console.log('All users removed');
+        logger.info('All users removed');
     } catch (error) {
-        console.log('FATAL ERROR: Failed to remove users collection');
+        logger.info('FATAL ERROR: Failed to remove users collection');
         process.exit();
     }
 
@@ -43,7 +43,7 @@ const reloadUsers = async () => {
             await collection.insertMany(users, {
                 ordered: false
             });
-            logger.info(`Page end | ${users.length} user records reloaded`);
+            logger.debug(`Page end | ${users.length} user records reloaded`);
         });
 
         logger.info(`Reloading users finished: ${numUsers} users reloaded`);
@@ -102,7 +102,7 @@ const updateUsers = async () => {
                 });
             });
             await collection.bulkWrite(ops);
-            logger.info(`Page end | ${users.length} user records updated`);
+            logger.debug(`Page end | ${users.length} user records updated`);
         });
         logger.info(`Updating users finished: ${numUsers} user updated`);
         logger.info('Goodbye!');

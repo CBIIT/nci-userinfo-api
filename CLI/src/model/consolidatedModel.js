@@ -6,14 +6,14 @@ const mongoConnector = require('../connectors/mongoConnector');
 
 const reloadUserView = async () => {
     const connection = await mongoConnector.getConnection();
-    console.log('connecting to ' + config.db.users_collection);
+    logger.info('connecting to ' + config.db.users_collection);
     const collection = await connection.collection(config.db.users_collection);
 
     try {
         await collection.remove({});
-        console.log('All users removed');
+        logger.info('All users removed');
     } catch (error) {
-        console.log('FATAL ERROR: Failed to remove users collection');
+        logger.info('FATAL ERROR: Failed to remove users collection');
         process.exit();
     }
 
@@ -22,7 +22,7 @@ const reloadUserView = async () => {
             await collection.insertMany(users, {
                 ordered: false
             });
-            logger.info(`Page end | ${users.length} users records reloaded`);
+            logger.debug(`Page end | ${users.length} users records reloaded`);
         });
         logger.info(`Reloading user finished: ${numUsers} users reloaded`);
         logger.info('Goodbye!');
@@ -36,18 +36,18 @@ const reloadUserView = async () => {
 
 const compareFredAndVDS = async () => {
     const connection = await mongoConnector.getConnection();
-    console.log('connecting to ' + config.db.fred_users_collection);
+    logger.info('connecting to ' + config.db.fred_users_collection);
     const collection = await connection.collection(config.db.fred_users_collection);
 
     try {
         const fredUsers = await collection.find({}).toArray();
-        console.log(fredUsers.length);
+        logger.info(fredUsers.length);
         const collection2 = await connection.collection(config.db.users_collection);
 
         for (const fredUser of fredUsers) {
-            // console.log(fredUser);
+            // logger.info(fredUser);
             const vdsUser = await collection2.findOne({ UNIQUEIDENTIFIER: fredUser.NedId });
-            // console.log(vdsUser);
+            // logger.info(vdsUser);
 
             if (vdsUser) {
                 if (vdsUser.GIVENNAME.toUpperCase() !== fredUser.FirstName.toUpperCase() || vdsUser.NIHMIXCASESN.toUpperCase() !== fredUser.LastName.toUpperCase()) {
