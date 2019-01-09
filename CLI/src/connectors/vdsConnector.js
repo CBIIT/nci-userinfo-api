@@ -8,7 +8,7 @@ const tlsOptions = {
 };
 const util = require('../util/base64Processing');
 
-const getUsers = (userId, ic) => {
+const getUsers = (userId, ic, cb) => {
 
     return new Promise(async (resolve, reject) => {
 
@@ -20,7 +20,7 @@ const getUsers = (userId, ic) => {
         var userSearchOptions = {
             scope: 'sub',
             // attributes: config.vds.user_attributes,
-            filter: filter,
+            // filter: filter,
             paged: true
         };
         var counter = 0;
@@ -48,12 +48,15 @@ const getUsers = (userId, ic) => {
                 });
                 ldapRes.on('searchReference', () => { });
                 ldapRes.on('page', () => {
-                    // logger.info('page end');
+                    if (cb) {
+                        cb(users);
+                    }
+                    users = [];
                 });
                 ldapRes.on('error', (err) => {
                     ldapClient.destroy();
                     if (err.code === 32) {
-                        resolve({});
+                        resolve(counter);
                     } else {
                         reject(Error(err.message));
                     }
@@ -62,7 +65,7 @@ const getUsers = (userId, ic) => {
                     logger.info(' destroy ldap client');
                     logger.info(counter + ' records found');
                     ldapClient.destroy();
-                    resolve(users);
+                    resolve(counter);
                 });
             });
         });

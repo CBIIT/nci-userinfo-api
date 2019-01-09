@@ -18,33 +18,35 @@ const reloadUsers = async () => {
     }
 
     try {
-        const users = await vdsConnector.getUsers(null, 'nci');
+        const numUsers = await vdsConnector.getUsers(null, 'nci', async (users) => {
+            users.forEach(user => {
+                user.NEDId = user.UNIQUEIDENTIFIER;
+                user.FirstName = user.GIVENNAME;
+                user.MiddleName = user.MIDDLENAME;
+                user.LastName = user.NIHMIXCASESN;
+                user.Email = getEmail(user);
+                user.Phone = user.TELEPHONENUMBER;
+                user.Classification = user.ORGANIZATIONALSTAT;
+                user.SAC = user.NIHSAC;
+                user.AdministrativeOfficerId = user.NIHSERVAO;
+                user.COTRId = user.NIHCOTRID;
+                user.ManagerId = user.MANAGER;
+                user.Locality - user.L;
+                user.PointOfContactId = user.NIHPOC;
+                user.Division = getDivision(user);
+                user.Locality = user.L;
+                user.Site = user.NIHSITE;
+                user.Building = getBuilding(user);
+                user.Room = user.ROOMNUMBER;
+            });
 
-        users.forEach(user => {
-            user.NEDId = user.UNIQUEIDENTIFIER;
-            user.FirstName = user.GIVENNAME;
-            user.MiddleName = user.MIDDLENAME;
-            user.LastName = user.NIHMIXCASESN;
-            user.Email = getEmail(user);
-            user.Phone = user.TELEPHONENUMBER;
-            user.Classification = user.ORGANIZATIONALSTAT;
-            user.SAC = user.NIHSAC;
-            user.AdministrativeOfficerId = user.NIHSERVAO;
-            user.COTRId = user.NIHCOTRID;
-            user.ManagerId = user.MANAGER;
-            user.Locality - user.L;
-            user.PointOfContactId = user.NIHPOC;
-            user.Division = getDivision(user);
-            user.Locality = user.L;
-            user.Site = user.NIHSITE;
-            user.Building = getBuilding(user);
-            user.Room = user.ROOMNUMBER;
+            await collection.insertMany(users, {
+                ordered: false
+            });
+            logger.info(`${users.length} user records reloaded`);
         });
 
-        await collection.insertMany(users, {
-            ordered: false
-        });
-        logger.info('Users reloaded');
+        logger.info(`Reload users finished. ${numUsers} users reloaded`);
         logger.info('Goodbye!');
         process.exit();
     } catch (error) {
@@ -68,40 +70,41 @@ const updateUsers = async () => {
 
     try {
         logger.info('Getting VDS users');
-        const users = await vdsConnector.getUsers(null, 'nci');
-        logger.info('Updating user records');
-        const ops = [];
+        const numUsers = await vdsConnector.getUsers(null, 'nci', async (users) => {
+            const ops = [];
 
-        users.forEach(user => {
-            user.NEDId = user.UNIQUEIDENTIFIER;
-            user.FirstName = user.GIVENNAME;
-            user.MiddleName = user.MIDDLENAME;
-            user.LastName = user.NIHMIXCASESN;
-            user.Email = getEmail(user);
-            user.Phone = user.TELEPHONENUMBER;
-            user.Classification = user.ORGANIZATIONALSTAT;
-            user.SAC = user.NIHSAC;
-            user.AdministrativeOfficerId = user.NIHSERVAO;
-            user.COTRId = user.NIHCOTRID;
-            user.ManagerId = user.MANAGER;
-            user.Locality - user.L;
-            user.PointOfContactId = user.NIHPOC;
-            user.Division = getDivision(user);
-            user.Locality = user.L;
-            user.Site = user.NIHSITE;
-            user.Building = getBuilding(user);
-            user.Room = user.ROOMNUMBER;
-            ops.push({
-                replaceOne:
-                    {
-                        filter: { UNIQUEIDENTIFIER: user.UNIQUEIDENTIFIER },
-                        replacement: user,
-                        upsert: true
-                    }
+            users.forEach(user => {
+                user.NEDId = user.UNIQUEIDENTIFIER;
+                user.FirstName = user.GIVENNAME;
+                user.MiddleName = user.MIDDLENAME;
+                user.LastName = user.NIHMIXCASESN;
+                user.Email = getEmail(user);
+                user.Phone = user.TELEPHONENUMBER;
+                user.Classification = user.ORGANIZATIONALSTAT;
+                user.SAC = user.NIHSAC;
+                user.AdministrativeOfficerId = user.NIHSERVAO;
+                user.COTRId = user.NIHCOTRID;
+                user.ManagerId = user.MANAGER;
+                user.Locality - user.L;
+                user.PointOfContactId = user.NIHPOC;
+                user.Division = getDivision(user);
+                user.Locality = user.L;
+                user.Site = user.NIHSITE;
+                user.Building = getBuilding(user);
+                user.Room = user.ROOMNUMBER;
+                ops.push({
+                    replaceOne:
+                        {
+                            filter: { UNIQUEIDENTIFIER: user.UNIQUEIDENTIFIER },
+                            replacement: user,
+                            upsert: true
+                        }
+                });
             });
+            await collection.bulkWrite(ops);
+            logger.info(`${users.length} user records updated`);
         });
-        await collection.bulkWrite(ops);
-        logger.info('User records updated');
+        logger.info(`Update users finished. ${numUsers} user updated`);
         logger.info('Goodbye!');
         process.exit(0);
     } catch (error) {
