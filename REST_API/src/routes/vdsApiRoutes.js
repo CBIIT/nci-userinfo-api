@@ -25,6 +25,7 @@ const router = () => {
     apiRouter.route('/users/ic/:ic')
         .get(async function (req, res) {
             try {
+                logger.info(`Getting VDS users by IC: ${req.params.ic}`);
                 const users = await getUsersByIc(req.params.ic);
                 if (users) {
                     if (req.accepts('xml')) {
@@ -42,42 +43,52 @@ const router = () => {
 
     apiRouter.route('/users/ic/:ic/realtime')
         .get(function (req, res) {
-            getUsers(null, req.params.ic)
-                .then(function (users) {
-                    if (req.accepts('xml')) {
-                        res.send(js2xmlparser('users', users, parserOptions));
-                    } else {
-                        res.send(users);
-                    }
-                }).catch(function (err) {
-                    res.status(500).send(err);
-                });
+            try {
+                logger.info(`Getting realtime VDS users by IC: ${req.params.ic}`);
+                getUsers(null, req.params.ic)
+                    .then(function (users) {
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('users', users, parserOptions));
+                        } else {
+                            res.send(users);
+                        }
+                    }).catch(function (err) {
+                        res.status(500).send(err);
+                    });
+            } catch (err) {
+                res.status(500).send(err);
+            }
         });
 
     apiRouter.route('/users/user/:nihId')
         .get(function (req, res) {
-            const nihId = req.params.nihId;
+            try {
+                logger.info(`Getting VDS user by NIH ID: ${req.params.nihId}`);
+                const nihId = req.params.nihId;
 
-            if (nihId === undefined) {
-                res.status(400).send('nihid is not defined.');
-                return;
+                if (nihId === undefined) {
+                    res.status(400).send('nihid is not defined.');
+                    return;
+                }
+
+                if (!isNum.test(nihId)) {
+                    res.status(400).send('nihid is not numeric.');
+                    return;
+                }
+
+                getUsers(nihId, '*')
+                    .then(function (users) {
+                        if (req.accepts('xml')) {
+                            res.send(js2xmlparser('users', users, parserOptions));
+                        } else {
+                            res.send(users);
+                        }
+                    }).catch(function (err) {
+                        res.status(500).send(err);
+                    });
+            } catch (err) {
+                res.status(500).send(err);
             }
-
-            if (!isNum.test(nihId)) {
-                res.status(400).send('nihid is not numeric.');
-                return;
-            }
-
-            getUsers(nihId, '*')
-                .then(function (users) {
-                    if (req.accepts('xml')) {
-                        res.send(js2xmlparser('users', users, parserOptions));
-                    } else {
-                        res.send(users);
-                    }
-                }).catch(function (err) {
-                    res.status(500).send(err);
-                });
         });
     return apiRouter;
 };
