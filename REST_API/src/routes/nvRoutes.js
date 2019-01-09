@@ -15,8 +15,8 @@ const router = () => {
 
     nvRouter.route('/props')
         .get(async (req, res) => {
-            logger.info('Getting all properties');
             try {
+                logger.info('Getting all properties');
                 const inputPageSize = parseInt(req.query.pageSize);
                 const pageSize = inputPageSize > 0 ? inputPageSize : 1000;
                 const inputPageNum = parseInt(req.query.pageNum);
@@ -28,14 +28,14 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
     nvRouter.route('/props/count')
         .get(async (req, res) => {
-            logger.info('Getting total number of all properties');
             try {
+                logger.info('Getting total number of all properties');
                 const numProps = await getPropertyCount({});
                 res.send({count: numProps});
             } catch (error) {
@@ -46,9 +46,9 @@ const router = () => {
 
     nvRouter.route('/props/user/:nihId')
         .get(async (req, res) => {
-            const nihId = req.params.nihId;
-            logger.info('Getting properties for ' + nihId);
             try {
+                const nihId = req.params.nihId;
+                logger.info('Getting properties for ' + nihId);
                 const props = await getPropertiesForUser(nihId);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
@@ -56,13 +56,14 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
     nvRouter.route('/props/orphaned')
         .get(async (req, res) => {
             try {
+                logger.info('Getting orphaned properties');
                 const props = await getOrphanedProperties();
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
@@ -70,7 +71,7 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 

@@ -18,8 +18,8 @@ const router = () => {
 
     fredRouter.route('/props')
         .get(async (req, res) => {
-            logger.info('Getting all Fred properties');
             try {
+                logger.info('Getting all Fred properties');
                 const inputPageSize = parseInt(req.query.pageSize);
                 const pageSize = inputPageSize > 0 ? inputPageSize : 1000;
                 const inputPageNum = parseInt(req.query.pageNum);
@@ -31,14 +31,14 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
     fredRouter.route('/props/count')
         .get(async (req, res) => {
-            logger.info('Getting total number of all Fred properties');
             try {
+                logger.info('Getting total number of all Fred properties');
                 const numProps = await getFredPropertyCount({});
                 res.send({count: numProps});
             } catch (error) {
@@ -48,9 +48,9 @@ const router = () => {
 
     fredRouter.route('/props/officer/:nihId')
         .get(async (req, res) => {
-            const nihId = req.params.nihId;
-            logger.info('Getting Fred properties for property officer ' + nihId);
             try {
+                const nihId = req.params.nihId;
+                logger.info('Getting Fred properties for property officer ' + nihId);
                 const props = await getFredPropertiesByPropertyOfficer(nihId);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
@@ -58,15 +58,15 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
     fredRouter.route('/props/custodian/:nihId')
         .get(async (req, res) => {
-            const nihId = req.params.nihId;
-            logger.info('Getting Fred properties for custodian ' + nihId);
             try {
+                const nihId = req.params.nihId;
+                logger.info('Getting Fred properties for custodian ' + nihId);
                 const props = await getFredPropertiesByCustodian(nihId);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('properties', props, parserOptions));
@@ -74,15 +74,15 @@ const router = () => {
                     res.send(props);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
 
     fredRouter.route('/users')
         .get(async (req, res) => {
-            logger.info('Getting all Fred users');
             try {
+                logger.info('Getting all Fred users');
                 const users = await getFredUsers();
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('users', users, parserOptions));
@@ -90,15 +90,15 @@ const router = () => {
                     res.send(users);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
     fredRouter.route('/users/user/:nihId')
         .get(async (req, res) => {
-            const nihId = req.params.nihId;
-            logger.info('Getting Fred user ' + nihId);
             try {
+                const nihId = req.params.nihId;
+                logger.info('Getting Fred user ' + nihId);
                 const user = await getFredUserById(nihId);
                 if (req.accepts('xml')) {
                     res.send(js2xmlparser('user', user, parserOptions));
@@ -106,7 +106,7 @@ const router = () => {
                     res.send(user);
                 }
             } catch (error) {
-                return error;
+                res.status(500).send(error);
             }
         });
 
