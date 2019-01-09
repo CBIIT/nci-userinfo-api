@@ -3,7 +3,8 @@ const logger = require('winston');
 const express = require('express');
 const fredRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
-const { getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById } = require('../model/db');
+const { getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian,
+    getFredUserById, getFredPropertyCount } = require('../model/db');
 
 
 const parserOptions = {
@@ -31,6 +32,17 @@ const router = () => {
                 }
             } catch (error) {
                 return error;
+            }
+        });
+
+    fredRouter.route('/props/count')
+        .get(async (req, res) => {
+            logger.info('Getting total number of all Fred properties');
+            try {
+                const numProps = await getFredPropertyCount({});
+                res.send({count: numProps});
+            } catch (error) {
+                res.status(500).send(error);
             }
         });
 

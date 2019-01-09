@@ -17,6 +17,13 @@ const getProperties = async (pageSize, pageNum) => {
     return results;
 };
 
+const getPropertyCount = async (filter = {}) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.properties_collection);
+    const results = await collection.count(filter);
+    return results;
+};
+
 const getPropertiesForUser = async (nihId) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.properties_collection);
@@ -80,6 +87,13 @@ const getFredProperties = async (pageSize, pageNum) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.fred_properties_collection);
     const results = await collection.find({}, fredPropertyProjection).skip(pageSize * (pageNum -1)).limit(pageSize).toArray();
+    return results;
+};
+
+const getFredPropertyCount = async (filter = {}) => {
+    const connection = getConnection();
+    const collection = connection.collection(config.db.fred_properties_collection);
+    const results = await collection.count(filter);
     return results;
 };
 
@@ -150,4 +164,6 @@ const getConnection = () => {
 };
 
 
-module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties, getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter, getOrgDescendantsBySac, getUsersByIc };
+module.exports = { initDbConnection, getProperties, getPropertiesForUser, getOrphanedProperties, getFredProperties,
+    getFredUsers, getFredPropertiesByPropertyOfficer, getFredPropertiesByCustodian, getFredUserById, getOrgByFilter,
+    getOrgDescendantsBySac, getUsersByIc, getFredPropertyCount, getPropertyCount };

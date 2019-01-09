@@ -3,7 +3,7 @@ const logger = require('winston');
 const express = require('express');
 const nvRouter = express.Router();
 const js2xmlparser = require('js2xmlparser2');
-const { getProperties, getPropertiesForUser, getOrphanedProperties } = require('../model/db');
+const { getProperties, getPropertiesForUser, getOrphanedProperties, getPropertyCount } = require('../model/db');
 
 const parserOptions = {
     wrapArray: {
@@ -29,6 +29,17 @@ const router = () => {
                 }
             } catch (error) {
                 return error;
+            }
+        });
+
+    nvRouter.route('/props/count')
+        .get(async (req, res) => {
+            logger.info('Getting total number of all properties');
+            try {
+                const numProps = await getPropertyCount({});
+                res.send({count: numProps});
+            } catch (error) {
+                res.status(500).send(error);
             }
         });
 
