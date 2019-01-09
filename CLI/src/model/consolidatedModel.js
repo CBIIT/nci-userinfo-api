@@ -19,12 +19,12 @@ const reloadUserView = async () => {
 
     try {
         const numUsers = await vdsConnector.getUsers(null, 'nci', async (users) => {
-            logger.info(`Loading ${users.length} users records`);
             await collection.insertMany(users, {
                 ordered: false
             });
+            logger.info(`Page end | ${users.length} users records reloaded`);
         });
-        logger.info(`${numUsers} users reloaded`);
+        logger.info(`Reloading user finished: ${numUsers} users reloaded`);
         logger.info('Goodbye!');
         process.exit();
     } catch (error) {

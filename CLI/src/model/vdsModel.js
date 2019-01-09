@@ -43,10 +43,10 @@ const reloadUsers = async () => {
             await collection.insertMany(users, {
                 ordered: false
             });
-            logger.info(`${users.length} user records reloaded`);
+            logger.info(`Page end | ${users.length} user records reloaded`);
         });
 
-        logger.info(`Reload users finished. ${numUsers} users reloaded`);
+        logger.info(`Reloading users finished: ${numUsers} users reloaded`);
         logger.info('Goodbye!');
         process.exit();
     } catch (error) {
@@ -102,9 +102,9 @@ const updateUsers = async () => {
                 });
             });
             await collection.bulkWrite(ops);
-            logger.info(`${users.length} user records updated`);
+            logger.info(`Page end | ${users.length} user records updated`);
         });
-        logger.info(`Update users finished. ${numUsers} user updated`);
+        logger.info(`Updating users finished: ${numUsers} user updated`);
         logger.info('Goodbye!');
         process.exit(0);
     } catch (error) {
