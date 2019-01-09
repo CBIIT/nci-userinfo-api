@@ -1,5 +1,6 @@
 'use strict';
 const { config } = require('../../constants');
+const logger = require('winston');
 const WSSecurity = require('wssecurity');
 const soap = require('soap');
 
@@ -27,6 +28,16 @@ const getChanges = (obj) => {
     return new Promise((resolve, reject) => {
 
         soap.createClient(wsdl, (err, soapClient) => {
+            //Todo: Add error checking code here
+            if (err) {
+                logger.error('Error happened when trying to get soap client!');
+                reject(err);
+            }
+            if (!soapClient) {
+                const message = 'Could not get soap client!';
+                logger.error(message);
+                reject(message);
+            }
             soapClient.setSecurity(wsSecurity);
 
             soapClient.ByIC(args, function (err, result) {
@@ -36,7 +47,6 @@ const getChanges = (obj) => {
                     resolve(result);
                 }
             });
-
         });
     });
 };
