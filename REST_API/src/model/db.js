@@ -138,11 +138,12 @@ const getOrgDescendantsBySac = async (sac) => {
 const getUsersByIc = async (ic) => {
     const connection = getConnection();
     const collection = connection.collection(config.db.users_collection);
-    const users = await collection.find({'NIHORGACRONYM': ic},  config.vds.user_attributes.reduce((acc, curr) => {
+    const users = await collection.find({'NIHORGACRONYM': ic, ReturnedByVDS: {$exists: false}},  config.vds.user_attributes.reduce((acc, curr) => {
         acc[curr] = 1;
         return acc;
     } ,{_id: 0}))
         .toArray();
+    logger.info(`${users.length} users found.`);
     return users;
 };
 
