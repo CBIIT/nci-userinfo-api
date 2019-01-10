@@ -11,7 +11,7 @@ const getChanges = (obj) => {
     let args = {
         ICorSITE: obj.ic,
         From_Date: obj.fromDate,
-    }
+    };
 
     if (obj.fromTime) {
         args.From_time = obj.fromTime;
@@ -28,7 +28,6 @@ const getChanges = (obj) => {
     return new Promise((resolve, reject) => {
 
         soap.createClient(wsdl, (err, soapClient) => {
-            //Todo: Add error checking code here
             if (err) {
                 logger.error('Error happened when trying to get soap client!');
                 reject(err);
