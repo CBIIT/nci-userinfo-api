@@ -104,7 +104,7 @@ const updateUsers = async () => {
             await collection.bulkWrite(ops);
             logger.debug(`Page end | ${users.length} user records updated`);
         });
-        logger.info(`Updating users finished: ${numUsers} user updated`);
+        logger.info(`Updating users finished: ${numUsers} users updated`);
         logger.info('Goodbye!');
         process.exit(0);
     } catch (error) {
