@@ -150,7 +150,6 @@ const getUsersByIc = async (ic) => {
 const initDbConnection = () => {
     return new Promise(async (resolve, reject) => {
         try {
-
             connection = await MongoClient.connect(config.db.url, { poolSize: 10 });
             resolve();
         } catch (error) {

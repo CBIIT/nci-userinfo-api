@@ -30,12 +30,12 @@ const getChanges = (obj) => {
         soap.createClient(wsdl, (err, soapClient) => {
             if (err) {
                 logger.error('Error happened when trying to get soap client!');
-                reject(err);
+                return reject(err);
             }
             if (!soapClient) {
                 const message = 'Could not get soap client!';
                 logger.error(message);
-                reject(message);
+                return reject(message);
             }
             soapClient.setSecurity(wsSecurity);
 

@@ -115,14 +115,19 @@ const getUsers = async (userId, ic) => {
             if (err) {
                 logger.error('Bind error: ' + err);
                 ldapClient.destroy();
-                reject(Error(err.message));
+                return reject(Error(err.message));
             }
             var users = [];
             logger.info('starting search');
             ldapClient.search(config.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     logger.error(err);
-                    reject(Error(err.message));
+                    return reject(Error(err.message));
+                }
+                if (!ldapRes) {
+                    const message = 'Could not get LDAP result!';
+                    logger.error(message);
+                    return reject(message);
                 }
                 ldapRes.on('searchEntry', function (entry) {
                     if (++counter % 10000 === 0) {

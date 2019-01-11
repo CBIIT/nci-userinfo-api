@@ -31,7 +31,7 @@ const getUsers = (userId, ic, cb) => {
             if (err) {
                 logger.error('Bind error: ' + err);
                 ldapClient.destroy();
-                reject(Error(err.message));
+                return reject(Error(err.message));
             }
             var users = [];
             logger.info('starting search');

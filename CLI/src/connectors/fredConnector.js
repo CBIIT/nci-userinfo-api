@@ -21,7 +21,12 @@ const getFredResultPromise = (wsdl, methodName) => {
         soap.createClient(wsdl, (err, soapClient) => {
             if (err) {
                 logger.error(err);
-                reject(err);
+                return reject(err);
+            }
+            if (!soapClient) {
+                const message = 'Could not get soap client!';
+                logger.error(message);
+                return reject(message);
             }
 
             soapClient.setSecurity(wsSecurity);

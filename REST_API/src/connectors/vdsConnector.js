@@ -30,13 +30,13 @@ const getUsersGraphQL = async (userId, ic) => {
             if (err) {
                 logger.error('Bind error: ' + err);
                 ldapClient.destroy();
-                reject(Error(err.message));
+                return reject(Error(err.message));
             }
             let users = [];
             logger.info('starting search');
             ldapClient.search(config.vds.searchBase, userSearchOptions, (err, ldapRes) => {
                 if (err) {
-                    reject(Error(err.message));
+                    return reject(Error(err.message));
                 }
                 ldapRes.on('searchEntry', (entry) => {
                     if (++counter % 10000 === 0) {

@@ -13,7 +13,12 @@ const getConnection = () => {
         } else {
             MongoClient.connect(config.db.url, (err, database) => {
                 if (err) {
-                    reject(err.message);
+                    return reject(err.message);
+                }
+                if (!database) {
+                    const message = 'Could not connect to MongoDB!';
+                    logger.error(message);
+                    return reject(message);
                 }
                 assert.equal(null, err);
                 logger.info('Mongo Connection successful');
