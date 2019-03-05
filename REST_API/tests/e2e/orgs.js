@@ -1,7 +1,7 @@
 const request = require('request');
 const { expect } = require('chai');
 
-describe('Test organization APIs', function() {
+describe('Testing organization APIs', function() {
     const address = process.env['TEST_API'];
     const sac = 'HNC1D';
     const shortNameLower = 'cbiit';
