@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "npm run test:env; npm run test:orgs",
+    "test:env": "mocha tests/e2e/env.js",
+    "test:orgs": "mocha tests/e2e/orgs.js"
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +37,7 @@
     "gulp-eslint": "^3.0.1",
     "gulp-mocha": "^6.0.0",
     "gulp-nodemon": "^2.2.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "request": "^2.88.0"
   }
 }
