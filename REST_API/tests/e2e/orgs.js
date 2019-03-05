@@ -8,14 +8,16 @@ describe('Testing organization APIs', function() {
     const shortNameUpper = 'CBIIT';
     const name = 'CENTER FOR BIOMEDICAL INFORMATICS & INFORMATION TECHNOLOGY';
     const path = 'NCI OD';
+    const OK = 200;
+    const timeOut = 10 * 1000; // 10 seconds
 
     /* organization */
     it(`Should be able to get organization by SAC: ${sac}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.equal(1);
@@ -25,11 +27,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.equal(1);
@@ -39,11 +41,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.equal(1);
@@ -53,11 +55,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by org path: ${path}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/org-path/${path}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.equal(1);
@@ -69,11 +71,11 @@ describe('Testing organization APIs', function() {
     /* Subbranches */
 
     it(`Should be able to get subbranches by sac: ${sac}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/subbranches/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.above(1);
@@ -85,11 +87,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/subbranches/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);
@@ -104,11 +106,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/subbranches/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);
@@ -123,11 +125,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by Name: ${name}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/subbranches/name/${name}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);
@@ -144,11 +146,11 @@ describe('Testing organization APIs', function() {
     /* Descendants */
 
     it(`Should be able to get descendants by sac: ${sac}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/descendants/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.above(1);
@@ -160,11 +162,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/descendants/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);
@@ -179,11 +181,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/descendants/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);
@@ -198,11 +200,11 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by Name: ${name}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/org/descendants/name/${name}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(OK);
             const results = JSON.parse(body);
             expect(results).not.to.be.a('null');
             expect(results.length).to.at.least(1);

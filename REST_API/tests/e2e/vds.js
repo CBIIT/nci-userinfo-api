@@ -8,9 +8,12 @@ describe('Testing VDS APIs', function() {
     const nihId = process.env['NIHID'] || '2002585450';
     const userName = config.users[0].user;
     const password = config.users[0].password;
+    const OK = 200;
+    const minUserCount = 1000;
+    const timeOut = 10 * 1000; // 10 seconds
 
     it(`Should be able to get users by IC: ${ic}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/vds/users/ic/${ic}`,
             {
                 'auth': {
@@ -24,10 +27,10 @@ describe('Testing VDS APIs', function() {
             function (error, response, body) {
                 expect(error).to.be.a('null');
                 expect(response).not.to.be.a('null');
-                expect(response.statusCode).to.equal(200);
+                expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
                 expect(results).not.to.be.a('null');
-                expect(results.length).to.above(1000);
+                expect(results.length).to.above(minUserCount);
                 for (const user of results) {
                     expect(user.NIHORGACRONYM).to.equal(ic);
                 }
@@ -36,7 +39,7 @@ describe('Testing VDS APIs', function() {
     });
 
     it(`Should be able to get user by NIH ID: ${nihId}`, function(done) {
-        this.timeout(10 * 1000); // 10 seconds
+        this.timeout(timeOut); // 10 seconds
         request(`${address}/api/vds/users/user/${nihId}`,
             {
                 'auth': {
@@ -50,7 +53,7 @@ describe('Testing VDS APIs', function() {
             function (error, response, body) {
                 expect(error).to.be.a('null');
                 expect(response).not.to.be.a('null');
-                expect(response.statusCode).to.equal(200);
+                expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
                 expect(results).not.to.be.a('null');
                 expect(results.length).to.equal(1);
