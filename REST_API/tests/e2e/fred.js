@@ -40,11 +40,11 @@ describe('Testing Fredric APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
-                expect(results).not.to.be.a('null');
+                expect(results).to.be.an('array');
                 expect(results.length).to.at.most(defaultPageSize);
                 done();
             });
@@ -63,11 +63,11 @@ describe('Testing Fredric APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
-                expect(results).not.to.be.a('null');
+                expect(results).to.be.an('array');
                 expect(results.length).to.at.most(pageSize);
                 done();
             });
@@ -86,11 +86,11 @@ describe('Testing Fredric APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
-                expect(results).not.to.be.a('null');
+                expect(results).to.be.an('object');
                 expect(results.count).to.above(minPropertyCount);
                 done();
             });
@@ -109,11 +109,11 @@ describe('Testing Fredric APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
-                expect(results).not.to.be.a('null');
+                expect(results).to.be.an('array');
                 expect(results.length).to.above(1);
                 for (const prop of results) {
                     expect(prop.PropertyOfficerNedId).to.equal(officerId);
@@ -135,11 +135,11 @@ describe('Testing Fredric APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 const results = JSON.parse(body);
-                expect(results).not.to.be.a('null');
+                expect(results).to.be.an('array');
                 expect(results.length).to.above(1);
                 for (const prop of results) {
                     expect(prop.CustodianNedId).to.equal(custodianId);

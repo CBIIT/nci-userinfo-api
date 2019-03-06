@@ -55,12 +55,12 @@ describe('Testing NED APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 expect(body).to.be.an('object');
                 const user = body.NEDPersonBase;
-                expect(user).not.to.be.a('null');
+                expect(user).to.be.an('object');
                 expect(user.Names.Name.GivenName).to.equal(firstName);
                 expect(user.Names.Name.MixCaseSurname).to.equal(lastName);
                 done();
@@ -85,12 +85,12 @@ describe('Testing NED APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 expect(body).to.be.an('object');
                 const user = body.NEDPerson;
-                expect(user).not.to.be.a('null');
+                expect(user).to.be.an('object');
                 expect(user.Uniqueidentifier).to.equal(nihId);
                 done();
             });
@@ -114,12 +114,12 @@ describe('Testing NED APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 expect(body).to.be.an('object');
                 const user = body.NEDPerson;
-                expect(user).not.to.be.a('null');
+                expect(user).to.be.an('object');
                 expect(user.NIHSSO.SSOUsername).to.equal(adAccount);
                 done();
             });
@@ -145,13 +145,13 @@ describe('Testing NED APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 expect(body).to.be.an('object');
                 expect(body.NUMBER_OF_RECORDS).to.above(MIN_CHANGES_COUNT);
                 const changes = body.NED_CHANGES_RECORD;
-                expect(changes).not.to.be.a('null');
+                expect(changes).to.be.an('array');
                 expect(changes.length).to.equal(parseInt(body.NUMBER_OF_RECORDS));
                 for (const user of changes) {
                     expect(user.NIHORGACRONYM).to.equal(ic);
@@ -178,13 +178,13 @@ describe('Testing NED APIs', function() {
                 }
             },
             function (error, response, body) {
-                expect(error).to.be.a('null');
-                expect(response).not.to.be.a('null');
+                expect(error).to.be.null;
+                expect(response).to.be.an('object');
                 expect(response.statusCode).to.equal(OK);
                 expect(body).to.be.an('object');
                 expect(body.NumberOfRecords).to.above(MIN_USER_COUNT);
                 const users = body.NEDPersonBase;
-                expect(users).not.to.be.a('null');
+                expect(users).to.be.an('array');
                 expect(users.length).to.equal(parseInt(body.NumberOfRecords));
                 for (const user of users) {
                     expect(user.NIHOrgAcronym).to.equal(ic);
