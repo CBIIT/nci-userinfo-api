@@ -28,7 +28,7 @@ describe('Testing Fredric APIs', function() {
     const custodianId = process.env['CUSTODIAN_ID'] || '0014049524';
 
     it('Should be able to get properties (default page size)', function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/fred/props/`,
             {
                 'auth': {
@@ -51,7 +51,7 @@ describe('Testing Fredric APIs', function() {
     });
 
     it(`Should be able to get properties specify page size to be ${pageSize}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/fred/props/?pageSize=${pageSize}`,
             {
                 'auth': {
@@ -74,7 +74,7 @@ describe('Testing Fredric APIs', function() {
     });
 
     it('Should be able to get property total count', function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/fred/props/count`,
             {
                 'auth': {
@@ -97,7 +97,7 @@ describe('Testing Fredric APIs', function() {
     });
 
     it('Should be able to getting Fred properties for property officer', function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/fred/props/officer/${ officerId }`,
             {
                 'auth': {
@@ -123,7 +123,7 @@ describe('Testing Fredric APIs', function() {
     });
 
     it('Should be able to getting Fred properties for custodian', function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/fred/props/custodian/${ custodianId }`,
             {
                 'auth': {

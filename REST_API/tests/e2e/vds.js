@@ -25,7 +25,7 @@ describe('Testing VDS APIs', function() {
     const nihId = process.env['NIHID'] || '2002585450';
 
     it(`Should be able to get user by NIH ID: ${nihId}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/vds/users/user/${nihId}`,
             {
                 'auth': {
@@ -49,7 +49,7 @@ describe('Testing VDS APIs', function() {
     });
 
     it(`Should be able to get users by IC: ${ic}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/vds/users/ic/${ic}`,
             {
                 'auth': {

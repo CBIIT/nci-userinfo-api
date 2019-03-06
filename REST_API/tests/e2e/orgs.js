@@ -26,7 +26,7 @@ describe('Testing organization APIs', function() {
 
     /* organization */
     it(`Should be able to get organization by SAC: ${sac}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -40,7 +40,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -54,7 +54,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -68,7 +68,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get organization by org path: ${path}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/org-path/${path}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -84,7 +84,7 @@ describe('Testing organization APIs', function() {
     /* Subbranches */
 
     it(`Should be able to get subbranches by sac: ${sac}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/subbranches/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -100,7 +100,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/subbranches/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -119,7 +119,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/subbranches/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -138,7 +138,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get subbranches by Name: ${name}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/subbranches/name/${name}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -159,7 +159,7 @@ describe('Testing organization APIs', function() {
     /* Descendants */
 
     it(`Should be able to get descendants by sac: ${sac}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/descendants/sac/${sac}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -175,7 +175,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by shortName: ${shortNameLower}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/descendants/short-name/${shortNameLower}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -194,7 +194,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by shortName: ${shortNameUpper}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/descendants/short-name/${shortNameUpper}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
@@ -213,7 +213,7 @@ describe('Testing organization APIs', function() {
     });
 
     it(`Should be able to get descendants by Name: ${name}`, function(done) {
-        this.timeout(TIME_OUT); // 10 seconds
+        this.timeout(TIME_OUT);
         request(`${address}/api/org/descendants/name/${name}`, function (error, response, body) {
             expect(error).to.be.a('null');
             expect(response).not.to.be.a('null');
