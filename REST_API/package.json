@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "npm run test:env; npm run test:orgs",
+    "test": "npm run test:env; npm run test:orgs; npm run test:fred; npm run test:ned; npm run test:nv; npm run test:vds",
     "test:env": "mocha tests/e2e/env.js",
-    "test:orgs": "mocha tests/e2e/orgs.js"
+    "test:orgs": "mocha tests/e2e/orgs.js",
+    "test:fred": "mocha tests/e2e/fred.js",
+    "test:ned": "mocha tests/e2e/ned.js",
+    "test:nv": "mocha tests/e2e/nv.js",
+    "test:vds": "mocha tests/e2e/vds.js"
   },
   "author": "",
   "license": "ISC",
