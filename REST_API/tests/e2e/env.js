@@ -1,3 +1,7 @@
+/**
+ * Environment variable TEST_API must be set
+ */
+
 const { expect } = require('chai');
 const request = require('request');
 
