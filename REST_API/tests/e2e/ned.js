@@ -24,7 +24,7 @@ describe('Testing NED APIs', function() {
     const userName = config.users[0].user;
     const password = config.users[0].password;
     const OK = 200;
-    const TIME_OUT = 10 * 1000; // 10 seconds
+    const TIME_OUT = (process.env['TIME_OUT'] || 10) * 1000; // default to 10 seconds
 
     const MIN_USER_COUNT = process.env['MIN_USER_COUNT'] || 9000;
     const firstName = process.env['FIRST_NAME'] || 'Ming';

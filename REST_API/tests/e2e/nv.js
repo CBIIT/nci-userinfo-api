@@ -15,7 +15,7 @@ describe('Testing nVision APIs', function() {
     const userName = config.users[0].user;
     const password = config.users[0].password;
     const OK = 200;
-    const TIME_OUT = 10 * 1000; // 10 seconds
+    const TIME_OUT = (process.env['TIME_OUT'] || 10) * 1000; // default to 10 seconds
 
     const defaultPageSize = 1000;
     const minPropertyCount = parseInt(process.env['MIN_PROPERTY_COUNT']) || 30000;

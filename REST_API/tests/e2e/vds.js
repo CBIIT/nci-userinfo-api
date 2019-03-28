@@ -18,7 +18,7 @@ describe('Testing VDS APIs', function() {
     const userName = config.users[0].user;
     const password = config.users[0].password;
     const OK = 200;
-    const TIME_OUT = 10 * 1000; // 10 seconds
+    const TIME_OUT = (process.env['TIME_OUT'] || 10) * 1000; // default to 10 seconds
 
     const minUserCount = parseInt(process.env['MIN_USER_COUNT']) || 9000;
     const ic = process.env['IC'] || 'NCI';

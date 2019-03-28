@@ -16,7 +16,7 @@ const { expect } = require('chai');
 describe('Testing organization APIs', function() {
     const address = process.env['TEST_API'];
     const OK = 200;
-    const TIME_OUT = 10 * 1000; // 10 seconds
+    const TIME_OUT = (process.env['TIME_OUT'] || 10) * 1000; // default to 10 seconds
 
     const sac = process.env['SAC'] || 'HNC1D';
     const shortNameLower = process.env['SHORT_NAME'] || 'cbiit';
