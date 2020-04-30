@@ -1,7 +1,4 @@
 'use strict';
-const { config } = require('../../constants');
-const base64LdapFields = config.vds.base64LdapFields;
-
 
 /** Generate VPN and Privacy, Security related training info
  * @input user 

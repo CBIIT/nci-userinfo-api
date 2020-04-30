@@ -10,7 +10,7 @@ const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
 const util = require('../util/base64Processing');
-const util_1 = require('../util/generateVPNandSecurityInfo');
+const util_1 = require('../util/GenerateVPNandSecurityInfo');
 const {getUsersByIc} = require('../model/db.js');
 
 var parserOptions = {
