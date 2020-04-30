@@ -5,9 +5,9 @@
  */
 const generateVPNandSecurityInfo = (entry) => {
     let memberOf = entry.memberOf;
-    //let privacy_comp = entry.NIHPrivacyAwarenessCompDate;
+    let privacy_comp = entry.NIHPrivacyAwarenessCompDate;
     let privacy_refresh = entry.PrivacyAwarenessRefresherCompDate;
-    //let security_comp = entry.NIHInformationSecurityAwarenessCompDate;
+    let security_comp = entry.NIHInformationSecurityAwarenessCompDate;
     let security_refresh = entry.InformationSecurityRefresherCompDate;
     
     //check VPN access
@@ -21,17 +21,26 @@ const generateVPNandSecurityInfo = (entry) => {
     }
 
     //fetch out latest training refresh date
+    let privacy_comp_result = "";
+    let security_comp_result = "";
     let privacy_refresh_result = "";
     let security_refresh_result = "";
-    if(Array.isArray(privacy_refresh)){
+    if(privacy_comp){
+        privacy_comp_result = privacy_comp;
+    }
+
+    if(privacy_refresh && Array.isArray(privacy_refresh)){
         privacy_refresh.sort(function(a, b){
             return new Date(b) - new Date(a);
         });
         privacy_refresh_result = privacy_refresh[0];
     }
     
+    if(security_comp){
+        security_comp_result = security_comp;
+    }
 
-    if(Array.isArray(security_refresh)){
+    if(security_refresh && Array.isArray(security_refresh)){
         security_refresh.sort(function(a, b){
             return new Date(b) - new Date(a);
         });
@@ -39,7 +48,9 @@ const generateVPNandSecurityInfo = (entry) => {
     }
 
     entry.NIHVPNRemoteAccess = vpn_result;
+    entry.NIHPrivacyAwarenessCompDate = privacy_comp_result;
     entry.PrivacyAwarenessRefresherCompDate = privacy_refresh_result;
+    entry.NIHInformationSecurityAwarenessCompDate = security_comp_result;
     entry.InformationSecurityRefresherCompDate = security_refresh_result;
 
 };
