@@ -13,11 +13,19 @@ const generateVPNandSecurityInfo = (entry) => {
     //check VPN access
     let vpn_result = false;
     if(memberOf){
-        memberOf.forEach( member => {
-            if (member.indexOf("CN=NIH Grant-VPN") >= 0) {
+        if(Array.isArray(memberOf)){
+            memberOf.forEach( member => {
+                if (member.indexOf("CN=NIH Grant-VPN") >= 0) {
+                    vpn_result = true;
+                }
+            });
+        }
+        else{
+            if (memberOf.indexOf("CN=NIH Grant-VPN") >= 0) {
                 vpn_result = true;
             }
-        });
+        }
+        
     }
 
     //fetch out latest training refresh date
