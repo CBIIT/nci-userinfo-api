@@ -10,6 +10,7 @@ const tlsOptions = {
     ca: [fs.readFileSync(config.vds.vdscert)]
 };
 const util = require('../util/base64Processing');
+const util_1 = require('../util/GenerateVPNandSecurityInfo');
 const {getUsersByIc} = require('../model/db.js');
 
 var parserOptions = {
@@ -28,6 +29,9 @@ const router = () => {
                 logger.info(`Getting VDS users by IC: ${req.params.ic}`);
                 const users = await getUsersByIc(req.params.ic);
                 if (users) {
+                    users.forEach( user => {
+                        util_1.generateVPNandSecurityInfo(user);
+                    });
                     if (req.accepts('xml')) {
                         res.send(js2xmlparser('users', users, parserOptions));
                     } else {
@@ -47,6 +51,9 @@ const router = () => {
                 logger.info(`Getting realtime VDS users by IC: ${req.params.ic}`);
                 getUsers(null, req.params.ic)
                     .then(function (users) {
+                        users.forEach( user => {
+                            util_1.generateVPNandSecurityInfo(user);
+                        });
                         if (req.accepts('xml')) {
                             res.send(js2xmlparser('users', users, parserOptions));
                         } else {
@@ -78,6 +85,9 @@ const router = () => {
 
                 getUsers(nihId, '*')
                     .then(function (users) {
+                        users.forEach( user => {
+                            util_1.generateVPNandSecurityInfo(user);
+                        });
                         if (req.accepts('xml')) {
                             res.send(js2xmlparser('users', users, parserOptions));
                         } else {
