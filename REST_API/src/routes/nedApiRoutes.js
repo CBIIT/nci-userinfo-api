@@ -17,7 +17,7 @@ const router = () => {
 
     var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
 
-    var wsSecurity_v7 = new WSSecurity(config.ned.username_v7, config.ned.password);
+    var wsSecurity_v7 = new WSSecurity(config.ned.username_v7, config.ned.password_v7);
 
     var isNum = new RegExp('^[0-9]+$');
 
@@ -200,7 +200,7 @@ const router = () => {
                 var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
                     soapClient.setSecurity(wsSecurity_v7);
-                    soapClient.ByADaccount(args, function (err, result) {
+                    soapClient.ByADAccount(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
                         } else {
