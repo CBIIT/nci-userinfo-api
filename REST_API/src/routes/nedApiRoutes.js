@@ -15,42 +15,13 @@ const parserOptions = {
 
 const router = () => {
 
-    var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
+    //var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
 
-    var wsSecurity_v7 = new WSSecurity(config.ned.username_v7, config.ned.password_v7);
+    var wsSecurity_v7= new WSSecurity(config.ned.username_v7, config.ned.password_v7);
 
     var isNum = new RegExp('^[0-9]+$');
 
     apiRouter.route('/ByName')
-        .post(function (req, res) {
-            try {
-                logger.info(`Getting NED user by name`);
-                var args = {
-                    FirstName: req.body.FirstName,
-                    LastName: req.body.LastName
-                };
-
-                var wsdl = config.ned.wsdl_v5;
-                soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
-                    soapClient.ByName(args, function (err, result) {
-                        if (err) {
-                            res.status(500).send(err);
-                        } else {
-                            if (req.accepts('xml')) {
-                                res.send(js2xmlparser('result', result, parserOptions));
-                            } else {
-                                res.send(result);
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                res.status(500).send(error);
-            }
-        });
-
-    apiRouter.route('/ByName/v7')
         .post(function (req, res) {
             try {
                 logger.info(`Getting NED user by name`);
@@ -78,6 +49,7 @@ const router = () => {
                 res.status(500).send(error);
             }
         });
+
 
     apiRouter.route('/ByNIHid')
         .post(function (req, res) {
@@ -99,47 +71,6 @@ const router = () => {
                     NIHID: req.body.nihid
                 };
 
-                var wsdl = config.ned.wsdl_v5;
-                soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
-                    soapClient.ByNIHId(args, function (err, result) {
-                        if (err) {
-                            res.status(500).send(err);
-                        } else {
-                            if (req.accepts('xml')) {
-                                res.send(js2xmlparser('result', result, parserOptions));
-                            } else {
-                                res.send(result);
-                            }
-                        }
-
-                    });
-                });
-            } catch (error) {
-                res.status(500).send(error);
-            }
-        });
-
-    apiRouter.route('/ByNIHid/v7')
-        .post(function (req, res) {
-            try {
-                logger.info(`Getting NED user by NIH ID`);
-                var nihId = req.body.nihid;
-
-                if (nihId === undefined) {
-                    res.status(400).send('nihid is not defined.');
-                    return;
-                }
-
-                if (!isNum.test(nihId)) {
-                    res.status(400).send('nihid is not numeric.');
-                    return;
-                }
-
-                var args = {
-                    NIHID: req.body.nihid
-                };
-
                 var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
                     soapClient.setSecurity(wsSecurity_v7);
@@ -160,6 +91,7 @@ const router = () => {
                 res.status(500).send(error);
             }
         });
+
 
     apiRouter.route('/ByIDAccount')
         .post(function (req, res) {
@@ -169,38 +101,10 @@ const router = () => {
                     Identifier: req.body.Identifier
                 };
 
-                var wsdl = config.ned.wsdl_v5;
-                soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
-                    soapClient.ByADaccount(args, function (err, result) {
-                        if (err) {
-                            res.status(500).send(err);
-                        } else {
-                            if (req.accepts('xml')) {
-                                res.send(js2xmlparser('result', result, parserOptions));
-                            } else {
-                                res.send(result);
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                res.status(500).send(error);
-            }
-        });
-
-    apiRouter.route('/ByIDAccount/v7')
-        .post(function (req, res) {
-            try {
-                logger.info(`Getting NED user by ID`);
-                var args = {
-                    Identifier: req.body.Identifier
-                };
-
                 var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
                     soapClient.setSecurity(wsSecurity_v7);
-                    soapClient.ByADAccount(args, function (err, result) {
+                    soapClient.ByADaccount(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
                         } else {
@@ -226,27 +130,6 @@ const router = () => {
                     ReturnNIHIDOnly: true
                 };
 
-                var wsdl = config.ned.wsdl_v5;
-                soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
-                    soapClient.ByIC(args, function (err, result) {
-                        res.send(result);
-                    });
-                });
-            } catch (error) {
-                res.status(500).send(error);
-            }
-        });
-
-    apiRouter.route('/ByIc/v7')
-        .post(function (req, res) {
-            try {
-                logger.info(`Getting NED users by IC`);
-                var args = {
-                    IC_or_SAC: req.body.IcoreSite,
-                    ReturnNIHIDOnly: true
-                };
-
                 var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
                     soapClient.setSecurity(wsSecurity_v7);
@@ -258,6 +141,7 @@ const router = () => {
                 res.status(500).send(error);
             }
         });
+
 
     apiRouter.route('/ChangesByIc')
         .post(function (req, res) {
@@ -284,7 +168,7 @@ const router = () => {
                 var wsdl = config.ned.wsdl_changes;
 
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
+                    soapClient.setSecurity(wsSecurity_v7);
                     soapClient.ByIC(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
