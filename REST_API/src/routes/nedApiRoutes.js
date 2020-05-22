@@ -104,7 +104,7 @@ const router = () => {
                 var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
                     soapClient.setSecurity(wsSecurity_v7);
-                    soapClient.ByADaccount(args, function (err, result) {
+                    soapClient.ByADAccount(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
                         } else {
