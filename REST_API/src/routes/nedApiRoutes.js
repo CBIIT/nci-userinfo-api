@@ -15,7 +15,9 @@ const parserOptions = {
 
 const router = () => {
 
-    var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
+    //var wsSecurity = new WSSecurity(config.ned.username, config.ned.password);
+
+    var wsSecurity_v7= new WSSecurity(config.ned.username_v7, config.ned.password_v7);
 
     var isNum = new RegExp('^[0-9]+$');
 
@@ -28,9 +30,9 @@ const router = () => {
                     LastName: req.body.LastName
                 };
 
-                var wsdl = config.ned.wsdl_v5;
+                var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
+                    soapClient.setSecurity(wsSecurity_v7);
                     soapClient.ByName(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
@@ -47,6 +49,7 @@ const router = () => {
                 res.status(500).send(error);
             }
         });
+
 
     apiRouter.route('/ByNIHid')
         .post(function (req, res) {
@@ -68,9 +71,9 @@ const router = () => {
                     NIHID: req.body.nihid
                 };
 
-                var wsdl = config.ned.wsdl_v5;
+                var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
+                    soapClient.setSecurity(wsSecurity_v7);
                     soapClient.ByNIHId(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
@@ -89,6 +92,7 @@ const router = () => {
             }
         });
 
+
     apiRouter.route('/ByIDAccount')
         .post(function (req, res) {
             try {
@@ -97,10 +101,10 @@ const router = () => {
                     Identifier: req.body.Identifier
                 };
 
-                var wsdl = config.ned.wsdl_v5;
+                var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
-                    soapClient.ByADaccount(args, function (err, result) {
+                    soapClient.setSecurity(wsSecurity_v7);
+                    soapClient.ByADAccount(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
                         } else {
@@ -126,9 +130,9 @@ const router = () => {
                     ReturnNIHIDOnly: true
                 };
 
-                var wsdl = config.ned.wsdl_v5;
+                var wsdl = config.ned.wsdl_v7;
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
+                    soapClient.setSecurity(wsSecurity_v7);
                     soapClient.ByIC(args, function (err, result) {
                         res.send(result);
                     });
@@ -137,6 +141,7 @@ const router = () => {
                 res.status(500).send(error);
             }
         });
+
 
     apiRouter.route('/ChangesByIc')
         .post(function (req, res) {
@@ -163,7 +168,7 @@ const router = () => {
                 var wsdl = config.ned.wsdl_changes;
 
                 soap.createClient(wsdl, function (err, soapClient) {
-                    soapClient.setSecurity(wsSecurity);
+                    soapClient.setSecurity(wsSecurity_v7);
                     soapClient.ByIC(args, function (err, result) {
                         if (err) {
                             res.status(500).send(err);
