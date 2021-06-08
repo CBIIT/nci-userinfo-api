@@ -1,6 +1,7 @@
 'use strict';
 const { getUsersGraphQL } = require('../connectors/vdsConnector');
 const { getUsersByIc } = require('./db.js');
+const { mapFields } = require('../connectors/vdsConnector');
 const { buildSchema } = require('graphql');
 
 const { getPropertiesForUser } = require('./db');
@@ -85,7 +86,7 @@ const root = {
 
     usersLocal: async(ic) => {
         const users = await getUsersByIc(ic.ic);
-        return users;
+        return users.map(user => mapFields(user));
     },
 
     user: async (id) => {
