@@ -1,5 +1,7 @@
 'use strict';
 const { getUsersGraphQL } = require('../connectors/vdsConnector');
+const { getUsersByIc } = require('./db.js');
+const { mapFields } = require('../connectors/vdsConnector');
 const { buildSchema } = require('graphql');
 
 const { getPropertiesForUser } = require('./db');
@@ -69,6 +71,7 @@ const schema = buildSchema(`
 
     type Query {
         users(ic: String): [BasicUser],
+        usersLocal(ic: String): [BasicUser],
         user(id: String): User,
         hello: String
     }
@@ -79,6 +82,11 @@ const root = {
     users: async (ic) => {
         const users = await getUsersGraphQL(null, ic.ic);
         return users;
+    },
+
+    usersLocal: async(ic) => {
+        const users = await getUsersByIc(ic.ic);
+        return users.map(user => mapFields(user));
     },
 
     user: async (id) => {
@@ -100,7 +108,7 @@ const root = {
                     user.point_of_contact = result[0];
                 }
             }
-          
+
             if (user.manager_id) {
                 const result = await getUsersGraphQL(user.manager_id, '*');
                 if (result.length > 0) {
@@ -114,7 +122,7 @@ const root = {
                     user.cotr = result[0];
                 }
             }
-          
+
             user.properties = await getPropertiesForUser(user.ned_id, '*');
         }
         return user;
