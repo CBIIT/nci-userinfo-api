@@ -163,7 +163,7 @@ const getEmail = (obj) => {
             }
         }
     }
-    if (result == null) return obj.MAIL;
+    if (result == null) result = obj.MAIL;
     if (result == null) return obj.NIHPRIMARYSMTP;
     return result;
 };
