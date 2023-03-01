@@ -39,9 +39,9 @@
     "eslint": "^3.19.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
-    "gulp-mocha": "^6.0.0",
+    "gulp-mocha": "^8.0.0",
     "gulp-nodemon": "^2.2.1",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "request": "^2.88.0"
   }
 }
