@@ -239,4 +239,4 @@ const inactive = (user) => {
     return result;
 };
 
-module.exports = { getUsersGraphQL };
+module.exports = { getUsersGraphQL, mapFields };
