@@ -27,7 +27,7 @@
     "ldapjs": "^1.0.1",
     "mongodb": "^2.2.33",
     "node-rest-client": "^3.1.0",
-    "soap": "^0.19.2",
+    "soap": "^0.45.0",
     "ssl-root-cas": "^1.2.3",
     "use-strict": "^1.0.1",
     "winston": "^2.3.1",
